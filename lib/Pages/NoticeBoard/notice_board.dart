@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:student360/Components/nav_bar.dart';
+
 
 class NoticeBoard extends StatefulWidget {
   const NoticeBoard({super.key});
