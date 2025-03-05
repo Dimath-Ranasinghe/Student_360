@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:student360/TeacherNoticeBoard/teacher_notice_page.dart';
 
 
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MaterialApp(),
+      home: TeacherNoticePage(),
     );
   }
 }
