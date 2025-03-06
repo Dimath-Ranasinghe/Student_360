@@ -20,7 +20,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/students", studentRoutes);
-mongoose.connect(MONGO_URI);
+mongoose.connect(MONGO_URI)
+.then(() => console.log("MongoDB Connected"))
+.catch((err)=>{
+  console.error("Database connection error:", err);
+  process.exit(1);
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
