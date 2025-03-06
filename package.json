@@ -1,0 +1,17 @@
+{
+  "name": "srb",
+  "version": "1.0.0",
+  "description": "Node.js SRB code",
+  "main": "index.js",
+  "scripts": {
+    "start": "node Main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dulaj",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.10.1"
+  }
+}
