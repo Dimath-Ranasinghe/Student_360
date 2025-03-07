@@ -18,6 +18,8 @@ const studentRecordSchema = new mongoose.Schema({
       ],
       totalMarks:{type: Number,default:0},
       average:{type: Number, default:0},
+      totalDaysHeld: {type: Number, required:true},
+      totalDaysAttended:{type:Number, required:true},
     },
   ],
 });
