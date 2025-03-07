@@ -9,6 +9,8 @@ class TeacherNoticePage extends StatefulWidget {
 }
 
 class _NoticeBoardState extends State<TeacherNoticePage> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController contentController = TextEditingController();
 
   void addNewNotice() {
     showDialog(context: context, builder: (context) {
