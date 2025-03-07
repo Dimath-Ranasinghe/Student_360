@@ -10,7 +10,35 @@ class TeacherNoticePage extends StatefulWidget {
 
 class _NoticeBoardState extends State<TeacherNoticePage> {
 
-  @override
+  void addNewNotice() {
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: Colors.white,
+        title: Center(
+          child: Text("ADD NEW NOTICE",
+            style: TextStyle(fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(27, 105, 215, 1)),
+          ),
+        ),
+        content: Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 0, left: 0, right: 0),
+          child: Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height * 0.5,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * 0.9,
+          ),
+        ),
+      );
+    });
+  }
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme
@@ -31,14 +59,14 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 0.0), // Adjust padding
+            padding: const EdgeInsets.only(right: 0.0),
             child: Container(
-              width: 130, // Set width
-              height: 100, // Set height
+              width: 130,
+              height: 100,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/logo.png'), // Image path
-                  fit: BoxFit.cover, // Adjust how the image fits
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -106,10 +134,10 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-
+          addNewNotice();
         },
-        child: Icon(Icons.add,size: 30,),
         backgroundColor: Color.fromRGBO(27, 105, 215, 1),
+        child: Icon(Icons.add,size: 30,),
       ),
     );
   }
