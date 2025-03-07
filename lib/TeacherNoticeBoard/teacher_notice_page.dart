@@ -42,9 +42,16 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
                   controller: titleController,
                   decoration: InputDecoration(
                       labelText: "Notice Title",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)
-                      )
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Color.fromRGBO(27, 105, 215, 1)),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Color.fromRGBO(27, 105, 215, 1), width: 1.5),
+                      ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Color.fromRGBO(27, 105, 215, 1),width: 1.7),
+                    )
                   ),
                 ),
                 SizedBox(height: 20),
@@ -53,9 +60,14 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
                   maxLines: 10,
                   decoration: InputDecoration(
                       hintText: "Notice Content",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)
-                      )
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Color.fromRGBO(27, 105, 215, 1), width: 1.5)
+                      ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Color.fromRGBO(27, 105, 215, 1),width: 1.7)
+                    )
                   ),
                 )
               ],
