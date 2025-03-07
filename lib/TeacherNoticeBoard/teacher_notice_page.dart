@@ -35,6 +35,31 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
                 .of(context)
                 .size
                 .width * 0.9,
+            child: Column(
+              children: [
+                SizedBox(height: 15),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                      labelText: "Notice Title",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)
+                      )
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: contentController,
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                      hintText: "Notice Content",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)
+                      )
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );
