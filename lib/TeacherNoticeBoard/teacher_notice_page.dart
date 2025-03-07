@@ -57,7 +57,7 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
                 SizedBox(height: 20),
                 TextField(
                   controller: contentController,
-                  maxLines: 10,
+                  maxLines: 8,
                   decoration: InputDecoration(
                       hintText: "Notice Content",
                       enabledBorder: OutlineInputBorder(
