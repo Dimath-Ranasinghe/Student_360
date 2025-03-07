@@ -9,13 +9,15 @@ const studentRecordSchema = new mongoose.Schema({
   religion: { type: String, enum:["Buddhism", "Hinduism", "Islam", "Christianity"], required:true },
   terms: [
     {
-      term: { type: String, required: true },
+      term: { type: String, enum:["1st Term", "2nd Term", "3rd Term"], required: true },
       subjects: [
         {
           subjectName: { type: String, required: true },
-          marks: { type: Number },
+          marks: { type: Number, required: true, min:0, max:100 },
         },
       ],
+      totalMarks:{type: Number,default:0},
+      average:{type: Number, default:0},
     },
   ],
 });
