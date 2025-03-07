@@ -69,6 +69,37 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
                       borderSide: BorderSide(color: Color.fromRGBO(27, 105, 215, 1),width: 1.7)
                     )
                   ),
+                ),
+                SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed:() => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(27, 105, 215, 1), // Custom button color
+                        foregroundColor: Colors.white, // Text color
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Rounded corners
+                        ),
+                      ),
+                      child: Text("Cancel"),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: saveNewNotice,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(27, 105, 215, 1), // Custom button color
+                        foregroundColor: Colors.white, // Text color
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Rounded corners
+                        ),
+                      ),
+                      child: Text("Add"),
+                    ),
+                  ],
                 )
               ],
             ),
@@ -76,6 +107,10 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
         ),
       );
     });
+  }
+
+  void saveNewNotice(){
+    Navigator.pop(context);
   }
     @override
   Widget build(BuildContext context) {
