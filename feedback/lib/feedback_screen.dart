@@ -10,6 +10,11 @@ class FeedbackScreen extends StatelessWidget {
         title: const Text("Feedback Section"),
       ),
       body: Center(child: Text('Feedback Screen')),
+       color: Colors.white,
+       child:Center(
+            child:Text('Feedback Screen Body',)
+        )
+       )
     );
   }
 }
