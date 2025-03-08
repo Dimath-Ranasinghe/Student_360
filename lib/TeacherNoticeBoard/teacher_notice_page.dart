@@ -110,7 +110,18 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
   }
 
   void saveNewNotice(){
-    Navigator.pop(context);
+    setState(() {
+      TeacherNote.noticeList.add(
+        TeacherNote(
+          title: titleController.text,
+          content: contentController.text,
+          dateTime: DateTime.now(),
+      ),
+      );
+      titleController.clear();
+      contentController.clear();
+      Navigator.pop(context);
+    });
   }
     @override
   Widget build(BuildContext context) {
