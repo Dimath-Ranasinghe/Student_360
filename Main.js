@@ -15,10 +15,12 @@ if (!MONGO_URI) {
 
 app.use(express.json());
 
+//Default Route
 app.get("/", (req, res) => {
   res.send("Student360 Backend is Running...");
 });
 
+//Database Connection
 app.use("/api/students", studentRoutes);
 mongoose.connect(MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
@@ -27,6 +29,7 @@ mongoose.connect(MONGO_URI)
   process.exit(1);
 });
 
+//Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

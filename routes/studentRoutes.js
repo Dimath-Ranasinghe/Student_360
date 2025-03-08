@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const StudentRecord = require("../models/StudentRecord");
 
+//API to enter or update marks
 router.post("/enter-marks", async (req, res) => {
   try {
     const { studentID, grade, class: className, language, religion, term, subjects, totalDaysHeld, totalDaysAttended } = req.body;
@@ -34,6 +35,7 @@ router.post("/enter-marks", async (req, res) => {
   }
 });
 
+//API to get student marks
 router.get("/view-marks/:studentID", async (req, res) => {
   try {
     const { studentID } = req.params;
@@ -49,7 +51,7 @@ router.get("/view-marks/:studentID", async (req, res) => {
   }
 });
 
-
+//Delete student record by studentID
 router.delete("/delete/:studentID", async (req, res) => {
   try {
     const { studentID } = req.params;

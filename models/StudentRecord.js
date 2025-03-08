@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 
 const studentRecordSchema = new mongoose.Schema({
   studentID: { type: String, required: true, unique: true },
-  grade: { type: Number, required: true, enum: [1,2,3,4,5] },
-  class: { type: String, required: true, match:/^[A-Z]$/ },
+  grade: { type: Number, required: true, enum: [1,2,3,4,5] },//Grade dropdown(1-5)
+  class: { type: String, required: true, match:/^[A-Z]$/ },//Class dropdown (A-Z)
   language: { type: String, enum:["Sinhala", "Tamil"], required:true },
   religion: { type: String, enum:["Buddhism", "Hinduism", "Islam", "Christianity"], required:true },
   terms: [
