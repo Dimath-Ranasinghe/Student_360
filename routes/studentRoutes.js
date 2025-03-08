@@ -10,6 +10,8 @@ router.post("/enter-marks", async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
     
+    const totalMarks = subjects.reduce((sum, subject)=> sum+ subject.marks, 0);
+    const average = subjects.length > 0 ? totalMarks / subjects.length : 0;
 
     let student = await StudentRecord.findOne({ studentID });
 
