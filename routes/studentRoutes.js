@@ -19,7 +19,13 @@ router.post("/enter-marks", async (req, res) => {
       student = new StudentRecord({ studentID, grade, class: className, terms: [] });
     }
 
-    student.terms.push({ term, subjects });
+    const termIndex = student.terms.findIndex((t) => t.term === term);
+
+    if (termIndex !== -1) {
+      student.terms[termIndex] = { term, subjects, totalMarks, average, totalDaysHeld, totalDaysAttended };
+    } else {
+      student.terms.push({ term, subjects, totalMarks, average, totalDaysHeld, totalDaysAttended });
+    }
 
     await student.save();
     res.status(200).json({ message: "Marks saved", student });
