@@ -1,37 +1,43 @@
 import 'package:flutter/material.dart';
-class ChatMessage{
-    final String text;
-    final bool isSender; // true if the message is sent by the teacher /false by student
 
-    ChatMessage({required this.text, required this.isSender});
+/// A simple model for chat messages.
+class ChatMessage {
+  final String text;
+  final bool isSender; // true if sent by teacher, false if by student
+
+  ChatMessage({required this.text, required this.isSender});
 }
-class FeedbackScreen extends StatelessWidget {
+
+class FeedbackScreen extends StatefulWidget {
   const FeedbackScreen({Key? key}) : super(key: key);
 
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
 }
- class _FeedbackScreenState extends State<FeedbackScreen> {
-    final TextEditingController _controller = TextEditingController();
-    final TextEditingController _messageController = TextEditingController();
-    //sample message
-    final List<ChatMessage> _messages = [
-        ChatMessage(text: 'Hello, how was the project?', isSender: true),
-        ChatMessage(text: 'Sure, I will check it out.', isSender: false),
-        ChatMessage(text: 'Let me know if you have questions.', isSender: true),
 
-    ];
-    void _sendMessage(){
-        final text = _messageController.text.trim();    
-        if (text.isEmpty) return;
-        setState(() {
+class _FeedbackScreenState extends State<FeedbackScreen> {
+  // Declare controllers for search and message input.
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+
+  // Sample messages.
+  final List<ChatMessage> _messages = [
+    ChatMessage(text: 'Hello, how was the project?', isSender: true),
+    ChatMessage(text: 'Sure, I will check it out.', isSender: false),
+    ChatMessage(text: 'Let me know if you have questions.', isSender: true),
+  ];
+
+  void _sendMessage() {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
+    setState(() {
       _messages.add(ChatMessage(text: text, isSender: true));
     });
     _messageController.clear();
     // TODO: Connect to backend for real-time messaging.
   }
-        
- Widget _buildMessageBubble(ChatMessage message) {
+
+  Widget _buildMessageBubble(ChatMessage message) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -62,11 +68,10 @@ class FeedbackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Updated AppBar with custom design.
       appBar: AppBar(
-        title: const Text("Feedback Section"),
-      ),
-      backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
-       centerTitle: true,
+        backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
+        centerTitle: true,
         elevation: 0,
         title: const Text(
           "Feedback Section",
@@ -74,9 +79,9 @@ class FeedbackScreen extends StatelessWidget {
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            ),
+          ),
         ),
-         iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 0.0),
@@ -93,24 +98,24 @@ class FeedbackScreen extends StatelessWidget {
           ),
         ],
       ),
-       backgroungColor: Colors.white,
-       body:Column(
+      backgroundColor: Colors.white,
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-            const SizedBox(height: 16.0),
-            Padding(
-                paddding: const EdgeInsets.symmetric(horizontal: 16.0),//the gap below the app bar
-                child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                        hintText: 'Select student ID/Teacher',
-                        prefixIcon:const Icon(Icons.search),
-                        border: OutlineInputBorder(),
-                            borderRadius: BorderRadius.circular(8.0),
-                        ),
-                    ) 
+          const SizedBox(height: 16.0), // Gap between AppBar and search box
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Select student ID/Teacher',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
+              ),
             ),
+          ),
           const SizedBox(height: 16.0),
           // Chat area with message bubbles.
           Expanded(
@@ -122,7 +127,7 @@ class FeedbackScreen extends StatelessWidget {
               },
             ),
           ),
-         // Bottom text input area.
+          // Bottom text input area.
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             color: Colors.white,
@@ -151,5 +156,4 @@ class FeedbackScreen extends StatelessWidget {
       ),
     );
   }
-}    
-
+}
