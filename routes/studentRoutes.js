@@ -28,7 +28,7 @@ router.post("/enter-marks", async (req, res) => {
     }
 
     await student.save();
-    res.status(200).json({ message: "Marks saved", student });
+    res.status(200).json({ message: "Marks updated successfully", student });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
