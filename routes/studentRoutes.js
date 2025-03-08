@@ -16,7 +16,7 @@ router.post("/enter-marks", async (req, res) => {
     let student = await StudentRecord.findOne({ studentID });
 
     if (!student) {
-      student = new StudentRecord({ studentID, grade, class: className, terms: [] });
+      student = new StudentRecord({ studentID, grade, class: className, language, religion, terms: [] });
     }
 
     const termIndex = student.terms.findIndex((t) => t.term === term);
