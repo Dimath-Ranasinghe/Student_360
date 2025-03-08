@@ -24,7 +24,7 @@ class FeedbackScreen extends StatelessWidget {
     void _sendMessage(){
         final text = _messageController.text.trim();    
         if (text.isEmpty) return;
-    setState(() {
+        setState(() {
       _messages.add(ChatMessage(text: text, isSender: true));
     });
     _messageController.clear();
@@ -65,13 +65,41 @@ class FeedbackScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Feedback Section"),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
+       centerTitle: true,
+        elevation: 0,
+        title: const Text(
+          "Feedback Section",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            ),
+        ),
+         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 0.0),
+            child: Container(
+              width: 130,
+              height: 100,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+       backgroungColor: Colors.white,
        body:Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
             const SizedBox(height: 16.0),
             Padding(
-                paddding: const EdgeInsets.all(16.0),//the gap below the app bar
+                paddding: const EdgeInsets.symmetric(horizontal: 16.0),//the gap below the app bar
                 child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
