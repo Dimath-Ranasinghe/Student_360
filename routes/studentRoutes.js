@@ -46,11 +46,18 @@ router.get("/view-marks/:studentID", async (req, res) => {
 
 router.delete("/delete/:studentID", async (req, res) => {
   try {
-    const student = await StudentRecord.findOneAndDelete({ studentID: req.params.studentID });
-    console.log(student);
+    const { studentID } = req.params;
+    const student = await StudentRecord.findOneAndDelete({ studentID });
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    res.status(200).json({ message: " Student record deleted successfully" });
   } catch (error) {
-    console.error("Error deleting student:", error);
+    res.status(500).json({ error: error.message });
   }
+
 });
 
 module.exports = router;
