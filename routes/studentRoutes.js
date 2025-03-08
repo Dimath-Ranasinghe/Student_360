@@ -36,13 +36,19 @@ router.post("/enter-marks", async (req, res) => {
 
 router.get("/view-marks/:studentID", async (req, res) => {
   try {
-    const student = await StudentRecord.findOne({ studentID: req.params.studentID });
-    if (!student) return res.status(404).json({ message: "Student not found" });
+    const { studentID } = req.params;
+    const student = await StudentRecord.findOne({ studentID });
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
     res.status(200).json(student);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 router.delete("/delete/:studentID", async (req, res) => {
   try {
