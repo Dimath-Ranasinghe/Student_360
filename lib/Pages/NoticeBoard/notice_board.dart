@@ -90,7 +90,8 @@ class _NoticeBoardState extends State<NoticeBoard> {
         child: ListView.builder(
           itemCount: notices.length,
           itemBuilder: (context, index) {
-            final notice = notices[index];
+            final reversedList = notices.reversed.toList();
+            final notice = reversedList[index];
             return Card(
               color: Colors.white,
               margin: const EdgeInsets.symmetric(vertical: 8),
