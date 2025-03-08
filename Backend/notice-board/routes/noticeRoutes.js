@@ -15,9 +15,14 @@ router.post('/', async (req, res) => {
     }
   });
 
-
-router.get('/', (req, res) => {
-  res.send('Notices route');
-});
+// Get all notices  
+router.get('/', async (req, res) => {
+    try {
+      const notices = await Notice.find({}, '_id title content date').sort({ date: -1 });
+      res.status(200).json(notices);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 module.exports = router;
