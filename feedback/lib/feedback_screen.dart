@@ -13,6 +13,7 @@ class FeedbackScreen extends StatelessWidget {
 }
  class _FeedbackScreenState extends State<FeedbackScreen> {
     final TextEditingController _controller = TextEditingController();
+    final TextEditingController _messageController = TextEditingController();
     //sample message
     final List<ChatMessage> _messages = [
         ChatMessage(text: 'Hello, how was the project?', isSender: true),
@@ -20,7 +21,17 @@ class FeedbackScreen extends StatelessWidget {
         ChatMessage(text: 'Let me know if you have questions.', isSender: true),
 
     ];
-     Widget _buildMessageBubble(ChatMessage message) {
+    void _sendMessage(){
+        final text = _messageController.text.trim();    
+        if (text.isEmpty) return;
+    setState(() {
+      _messages.add(ChatMessage(text: text, isSender: true));
+    });
+    _messageController.clear();
+    // TODO: Connect to backend for real-time messaging.
+  }
+        
+ Widget _buildMessageBubble(ChatMessage message) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -72,7 +83,7 @@ class FeedbackScreen extends StatelessWidget {
                     ) 
                 ),
             ),
-             const SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           // Chat area with message bubbles.
           Expanded(
             child: ListView.builder(
@@ -80,9 +91,37 @@ class FeedbackScreen extends StatelessWidget {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 return _buildMessageBubble(_messages[index]);
-            },
+              },
+            ),
+          ),
+         // Bottom text input area.
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            color: Colors.white,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: 'Type your message...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                IconButton(
+                  icon: const Icon(Icons.send, color: Colors.blue),
+                  onPressed: _sendMessage,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
-}
+}    
+
