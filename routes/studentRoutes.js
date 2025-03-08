@@ -5,7 +5,11 @@ const StudentRecord = require("../models/StudentRecord");
 
 router.post("/enter-marks", async (req, res) => {
   try {
-    const { studentID, grade, class: className, term, subjects } = req.body;
+    const { studentID, grade, class: className, language, religion, term, subjects, totalDaysHeld, totalDaysAttended } = req.body;
+    if (!studentID || !grade || !className || !language || !religion || !term || !subjects || !totalDaysHeld || !totalDaysAttended) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    
 
     let student = await StudentRecord.findOne({ studentID });
 
