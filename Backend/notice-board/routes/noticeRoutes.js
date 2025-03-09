@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
       await notice.save();
       res.status(201).json({ message: 'Notice created successfully', notice });
     } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Unable to process request at this moment. Please try again later.' });
     }
   });
 
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       const notices = await Notice.find({}, '_id title content date').sort({ date: -1 });
       res.status(200).json(notices);
     } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Unable to process request at this moment. Please try again later.' });
     }
   });
 
@@ -35,7 +35,7 @@ router.delete('/:id', async (req, res) => {
       }
       res.status(200).json({ message: 'Notice deleted successfully' });
     } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Unable to process request at this moment. Please try again later.' });
     }
 });
   
