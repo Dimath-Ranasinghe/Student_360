@@ -138,20 +138,37 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
     });
   }
 
-  void saveNewNotice(){
-    setState(() {
-      TeacherNote.noticeList.add(
-        TeacherNote(
-          title: titleController.text,
-          content: contentController.text,
-          dateTime: DateTime.now(),
-      ),
-      );
-      titleController.clear();
-      contentController.clear();
-      Navigator.pop(context);
-    });
+  void saveNewNotice() async{
+    if(titleController.text.isNotEmpty && contentController.text.isNotEmpty){
+      bool isSuccess = await postNotice(titleController.text, contentController.text);
+      if(isSuccess){
+        _getNotices();
+        titleController.clear();
+        contentController.clear();
+        Navigator.pop(context);
+      }else{
+        _showErrorDialog("Failed to add notice. Please try again.");
+      }
+    }else{
+      _showErrorDialog("Title and content cannot be empty.");
+    }
   }
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Error"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
     @override
   Widget build(BuildContext context) {
     return Scaffold(
