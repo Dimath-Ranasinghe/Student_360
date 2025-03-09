@@ -11,13 +11,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void LoginHandle(){
+  void loginHandle(){
     String userID = _userIDController.text.trim();
 
-    if(userID.length == 6){
+    if (userID.length == 6) {
       Navigator.pop(context);
-    }else{
+    } else if (userID.length == 5) {
       Navigator.pop(context);
+    } else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Center(child: Text("Invalid User ID. Please Enter a Valid User ID",)),
+        backgroundColor: Colors.red,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)
+        ),
+      ));
     }
   }
   @override
@@ -94,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Login Button
                   ElevatedButton(
                     onPressed: () {
+                      loginHandle();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
