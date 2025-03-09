@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
       const notices = await Notice.find({}, '_id title content date').sort({ date: -1 });
-      res.status(200).json(notices);
+      res.status(200).json({ message: 'Notices fetched successfully', data: notices });
     } catch (error) {
       res.status(500).json({ error: 'Unable to process request at this moment. Please try again later.' });
     }
