@@ -18,4 +18,17 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// POST: Create a new user
+router.post('/', async (req, res) => {
+    const { userId, name, role } = req.body;
+    const user = new User({ userId, name, role });
+    try {
+      const savedUser = await user.save();
+      res.status(201).json(savedUser);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+  
+
 module.exports = router;
