@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:student360/TeacherNoticeBoard/teacher_notice.dart';
+import 'package:http/http.dart' as http;
+
+import '../API/base.dart';
+
 
 class TeacherNoticePage extends StatefulWidget {
   const TeacherNoticePage({super.key});
@@ -11,6 +17,29 @@ class TeacherNoticePage extends StatefulWidget {
 class _NoticeBoardState extends State<TeacherNoticePage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    _getNotices();
+  }
+
+  void _getNotices() async{
+    debugPrint("Fetching Notices...");
+    http.Response response = await getNotices();
+
+    if (response.statusCode == 200 || response.statusCode ==201){
+      debugPrint("Notices Recieved");
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+
+      setState(() {
+        TeacherNote.noticeList =
+            jsonResponse.map((e) => TeacherNote.fromJson(e)).toList();
+      });
+    } else {
+      debugPrint("Failed to fetach notices");
+    }
+  }
 
   void addNewNotice() {
     showDialog(context: context, builder: (context) {
