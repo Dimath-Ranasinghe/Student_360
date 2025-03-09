@@ -7,6 +7,12 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     try {
       const { title, content } = req.body;
+      
+      // check if title or content is missing
+      if (!title || !content) {
+        return res.status(400).json({ error: 'Title and content are required' });
+    }
+
       const notice = new Notice({ title, content });
       await notice.save();
       res.status(201).json({ message: 'Notice created successfully', notice });
