@@ -7,13 +7,8 @@ const port = 3000;
 app.use(express.json());
 
 // MongoDB Connection
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/student', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error(err));
+const db = require('./db');
+db.then(() => console.log('MongoDB connected')).catch(err => console.error(err));
 
 // Routes
 app.use('/api/notices', noticeRoutes);
