@@ -1,4 +1,6 @@
 const express = require('express');
+const messagesRouter = require('./routees/messages');
+const usersRouter = require('./routes/users');
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
@@ -23,7 +25,11 @@ const socketIo = require('socket.io');
 
 const server = http.createServer(app);
 const io = socketIo(server, {cors:{origin:"*",meathods:["GET","POST"]}});
+//API
+app.use('/api/messages', messagesRouter);
+app.use('/api/users', usersRouter);
 
+//Socket.io  for real time communication
 io.on('connection', (socket) => {
     console.log('New client connected');
     socket.on('sendMessage',(data)=>{
