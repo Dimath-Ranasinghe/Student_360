@@ -45,3 +45,16 @@ exports.updateProfile = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Function to get single profile by ID
+exports.getProfileById = async (req, res) => {
+    try {
+        const profile = await TeacherProfile.findById(req.params.id);
+        if (!profile) {
+            return res.status(404).json({ message: 'Profile not found' });
+        }
+        res.status(200).json(profile);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
