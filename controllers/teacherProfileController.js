@@ -58,3 +58,16 @@ exports.getProfileById = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Function to delete profile
+exports.deleteProfile = async (req, res) => {
+    try {
+        const deletedProfile = await TeacherProfile.findByIdAndDelete(req.params.id);
+        if (!deletedProfile) {
+            return res.status(404).json({ message: 'Profile not found' });
+        }
+        res.status(200).json({ message: 'Profile deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
