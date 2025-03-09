@@ -16,3 +16,6 @@ app.use('/api/notices', noticeRoutes);
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+require('dotenv').config();
+mongoose.connect(process.env.DB_URI);
