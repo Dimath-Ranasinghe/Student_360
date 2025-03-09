@@ -64,10 +64,10 @@ class _NoticeBoardState extends State<NoticeBoard> {
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 0.0),
+            padding: const EdgeInsets.only(right: 5),
             child: Container(
-              width: 130,
-              height: 100,
+              width: 110,
+              height: 110,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/logo.png'),

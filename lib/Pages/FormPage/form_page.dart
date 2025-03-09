@@ -58,7 +58,7 @@ class _FormPageState extends State<FormPage> {
         centerTitle: true,
         elevation: 0,
         title: const Text(
-          "Record Book",
+          "Notice Board",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -68,13 +68,15 @@ class _FormPageState extends State<FormPage> {
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: SizedBox(
-              width: 100,
-              height: 50,
-              child: Image.asset(
-                'assets/logo.png',
-                fit: BoxFit.contain,
+            padding: const EdgeInsets.only(right: 5),
+            child: Container(
+              width: 110,
+              height: 110,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
