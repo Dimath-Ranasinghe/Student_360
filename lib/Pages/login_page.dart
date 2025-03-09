@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       Image.asset(
                         'assets/logo.png',
-                        width: 220,
+                        width: 200,
                       ),
                       const Text(
                         'Welcome Back',
@@ -38,7 +38,7 @@ class LoginScreen extends StatelessWidget {
                   TextField(
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.grey.shade500,
+                      fillColor: Colors.grey.withAlpha(95),
                       hintText: 'User ID',
                       hintStyle: const TextStyle(
                         color: Colors.white,
@@ -56,14 +56,14 @@ class LoginScreen extends StatelessWidget {
                     obscureText: true,
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.transparent,
+                      fillColor: Colors.grey.withAlpha(95),
                       hintStyle: const TextStyle(
                         color: Colors.white,
                       ),
                       hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock, color: Colors.white),
                       suffixIcon: const Icon(Icons.visibility_off,
-                          color: Color.fromRGBO(27, 105, 215, 1)),
+                          color: Colors.white),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
