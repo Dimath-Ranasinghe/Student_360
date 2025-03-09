@@ -4,3 +4,4 @@ const teacherProfileController = require('../controllers/teacherProfileControlle
 
 router.post('/', teacherProfileController.createProfile);
 router.get('/', teacherProfileController.getAllProfiles);
+router.put('/:id', teacherProfileController.updateProfile);
