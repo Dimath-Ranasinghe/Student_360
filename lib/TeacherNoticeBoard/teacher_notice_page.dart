@@ -147,22 +147,43 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
         contentController.clear();
         Navigator.pop(context);
       }else{
-        _showErrorDialog("Failed to add notice. Please try again.");
+        _showErrorDialog(context, "Failed to add notice. Please try again.");
       }
     }else{
-      _showErrorDialog("Title and content cannot be empty.");
+      _showErrorDialog(context, "Title and content cannot be empty.");
     }
   }
-  void _showErrorDialog(String message) {
+  void _showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Error"),
-        content: Text(message),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          "Error",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color.fromRGBO(27, 105, 215, 1),
+          ),
+        ),
+        content: Text(
+          message,
+          style: TextStyle(fontSize: 16, color: Colors.black87),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Color.fromRGBO(27, 105, 215, 1),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text("OK", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
