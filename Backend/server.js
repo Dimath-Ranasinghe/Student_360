@@ -14,3 +14,25 @@ const mongoURI = process.env.MONGO_URI ||'mongodb://localhost:27017/feedbackApp'
 mongoose.connect(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
+
+
+//Socket.io for real time communication
+
+const http = require('http');
+const socketIo = require('socket.io');
+
+const server = http.createServer(app);
+const io = socketIo(server, {cors:{origin:"*",meathods:["GET","POST"]}});
+
+io.on('connection', (socket) => {
+    console.log('New client connected');
+    socket.on('sendMessage',(data)=>{
+        io.emit('receiveMessage',data);//mew message
+    });
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
+//server
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
