@@ -10,53 +10,20 @@ class TeacherNote{
     required this.content,
     required this.dateTime
   });
+  factory TeacherNote.fromJson(Map<String, dynamic> json){
+    return TeacherNote(
+      title: json["title"] ?? "",
+      content: json["content"] ?? "",
+      dateTime: DateTime.tryParse(json["date"] ?? "") ??
+          DateTime.now(),
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      "title": title,
+      "content": content,
+    };
+  }
 
-  static List<TeacherNote> noticeList = [
-    TeacherNote(
-        title: "Exam Schedule Released",
-        content: "The semester exams will start from March 10. Check your schedule.",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "Holiday Notice",
-        content: "School will remain closed on February 15 due to maintenance.",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "New Library Books Available",
-        content: "New books have been added to the library. Visit and explore!",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "Exam Schedule Released",
-        content: "The semester exams will start from March 10. Check your schedule.",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "Exam Schedule Released",
-        content: "The semester exams will start from March 10. Check your schedule.",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "Holiday Notice",
-        content: "School will remain closed on February 15 due to maintenance.",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "New Library Books Available",
-        content: "New books have been added to the library. Visit and explore!",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "Exam Schedule Released",
-        content: "The semester exams will start from March 10. Check your schedule.",
-        dateTime: DateTime.now()
-    ),
-    TeacherNote(
-        title: "Holiday Notice",
-        content: "School will remain closed on February 15 due to maintenance.",
-        dateTime: DateTime.now()
-    )
-  ];
-
+  static List<TeacherNote> noticeList = [];
 }
