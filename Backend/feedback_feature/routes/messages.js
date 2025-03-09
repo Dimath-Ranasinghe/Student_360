@@ -19,4 +19,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+// POST: Create a new message
+router.post('/', async (req, res) => {
+    const { text, from, to } = req.body;
+    const message = new Message({ text, from, to });
+    try {
+      const savedMessage = await message.save();
+      res.status(201).json(savedMessage);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+  
+
 module.exports = router;
