@@ -1,7 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
+  final TextEditingController _userIDController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void LoginHandle(){
+    String userID = _userIDController.text.trim();
+
+    if(userID.length == 6){
+      Navigator.pop(context);
+    }else{
+      Navigator.pop(context);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +54,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   // User ID Field
                   TextField(
+                    controller: _userIDController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey.withAlpha(95),
@@ -53,6 +72,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   // Password Field
                   TextField(
+                    controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       filled: true,
