@@ -6,6 +6,7 @@ Widget build(BuildContext context) {
 return Scaffold(
 backgroundColor: Color(0xFF1E1E1E), // Dark background color
 appBar: AppBar(
+backgroundColor: Color(0xFF1869D4), // Blue app bar
 title: Row(
 mainAxisAlignment: MainAxisAlignment.center,
 children: [
@@ -15,7 +16,10 @@ Text('STUDENT 360°'),
 ],
 ),
 centerTitle: true,
-
+leading: IconButton(
+icon: Icon(Icons.menu, color: Colors.white),
+onPressed: () {}, // Handle menu button press
+),
 ),
 
 );
@@ -36,7 +40,10 @@ padding: const EdgeInsets.symmetric(vertical: 4),
 child: Row(
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
-
+Text(
+"$title: ",
+style: TextStyle(fontWeight: FontWeight.bold),
+),
 Expanded(
 child: Text(
 value,
