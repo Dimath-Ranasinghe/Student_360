@@ -10,7 +10,10 @@ backgroundColor: Color(0xFF1869D4), // Blue app bar
 title: Row(
 mainAxisAlignment: MainAxisAlignment.center,
 children: [
-
+Image.asset(
+'assets/logo.png', // Replace with your logo image
+height: 30,
+),
 SizedBox(width: 8),
 Text('STUDENT 360°'),
 ],
@@ -42,7 +45,12 @@ fontWeight: FontWeight.bold,
 ),
 ),
 ),
-
+SizedBox(height: 40),
+CircleAvatar(
+radius: 80,
+backgroundColor: Colors.white,
+child: Icon(Icons.person, size: 80, color: Colors.black),
+),
 SizedBox(height: 16),
 ProfileDetail(title: "Name", value: "Sasan Weerasinghe"),
 ProfileDetail(title: "Contact number", value: "072 1234 567"),
