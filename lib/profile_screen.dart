@@ -21,7 +21,32 @@ icon: Icon(Icons.menu, color: Colors.white),
 onPressed: () {}, // Handle menu button press
 ),
 ),
+body: Center(
+child: Container(
+margin: EdgeInsets.all(16),
+padding: EdgeInsets.all(16),
+decoration: BoxDecoration(
+color: Color(0xFFD9D9D9), // Light gray profile card
+borderRadius: BorderRadius.circular(16),
+),
+child: Column(
+mainAxisSize: MainAxisSize.min,
+children: [
+Align(
+alignment: Alignment.topLeft,
+child: Text(
+"PROFILE",
+style: TextStyle(
+fontSize: 20,
+fontWeight: FontWeight.bold,
+),
+),
+),
 
+],
+),
+),
+),
 );
 }
 }
