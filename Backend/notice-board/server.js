@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const noticeRoutes = require('./routes/noticeRoutes');
 const port = 3000;
+const mongoose = require('mongoose');
 
 // Middleware
 app.use(express.json());
