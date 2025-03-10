@@ -33,54 +33,75 @@ exports.getAllProfiles = async (req, res) => {
     try {
         // Get all teacher profiles from the database
         const profiles = await TeacherProfile.find();
+        if (!profiles.length) {
+            return res.status(404).json({message: 'No profiles found!'});
+        }
+
         // Sends success message 
         res.status(200).json(profiles);
+
     } catch (error) {
         // Sends error message
-        res.status(500).json({ error: error.message });
+        res.status(500).json({message: 'Error retrieving profiles', error: error.message});
     }
 };
 
 // Function to update an existing teacher profile
 exports.updateProfile = async (req, res) => {
     try {
+        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({message: 'Invalid profile ID format!'});
+        }
+
         // Find the profile by ID and update it with the request body data
         const updatedProfile = await TeacherProfile.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true, runValidators: true } // Return updated profile and run validators
         );
+
         if (!updatedProfile) {
-            return res.status(404).json({ message: 'Profile not found' });
+            return res.status(404).json({message: 'Profile not found!'});
         }
+
         res.status(200).json(updatedProfile);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({message: 'Error updating profile', error: error.message});
     }
 };
 
 // Function to get single profile by ID
 exports.getProfileById = async (req, res) => {
     try {
+        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({message: 'Invalid profile ID format!'});
+        }
+
         const profile = await TeacherProfile.findById(req.params.id);
         if (!profile) {
-            return res.status(404).json({ message: 'Profile not found' });
+            return res.status(404).json({message: 'Profile not found!'});
         }
+
         res.status(200).json(profile);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({message: 'Error retrieving profile', error: error.message});
     }
 };
 
 // Function to delete profile
 exports.deleteProfile = async (req, res) => {
     try {
+        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({message: 'Invalid profile ID format!'});
+        }
+
         const deletedProfile = await TeacherProfile.findByIdAndDelete(req.params.id);
         if (!deletedProfile) {
-            return res.status(404).json({ message: 'Profile not found' });
+            return res.status(404).json({message: 'Profile not found!'});
         }
-        res.status(200).json({ message: 'Profile deleted successfully' });
+
+        res.status(200).json({message: 'Profile deleted successfully!'});
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({message: 'Error deleting profile!', error: error.message});
     }
 };
