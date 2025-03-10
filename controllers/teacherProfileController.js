@@ -3,6 +3,19 @@ const TeacherProfile = require('../models/TeacherProfile');
 // Function to create a new teacher profile
 exports.createProfile = async (req, res) => {
     try {
+        // Validate fields
+        const {name, email, phone} = req.body;
+        if (!name || !email || !phone) {
+            return res.status(400).json({message: 'Name, email and phone are required!'});
+        }
+
+        // Check if profile already exists
+        const existingProfile = await TeacherProfile.findOne({ email });
+        if (existingProfile) {
+            return res.status(409).json({ message: 'A profile with this email already exists!' });
+        }
+
+        // Create new profile
         const newProfile = new TeacherProfile(req.body);
         // Save the profile to the database
         const savedProfile = await newProfile.save();
@@ -11,7 +24,7 @@ exports.createProfile = async (req, res) => {
 
     } catch (error) {
         // Handle errors and send an error message
-        res.status(500).json({ error: error.message });
+        res.status(500).json({message: 'Erroe creating profile.', error: error.message});
     }
 };
 
