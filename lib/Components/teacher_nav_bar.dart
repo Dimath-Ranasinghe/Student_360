@@ -21,7 +21,7 @@ class _TeacherNavBarState extends State<TeacherNavBar> {
   final List<Widget> _pages = [
     FormPage(),
     TeacherNoticePage(),
-    FeedbackPage(),
+    FeedbackScreen(),
     ProfilePage()
   ];
 
