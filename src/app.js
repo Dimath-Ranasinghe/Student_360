@@ -12,4 +12,9 @@ app.use(cors()); // Added CORS
 app.get("/", (req, res) => {
     res.send("Student360 Backend is Running...");
   });
+
   
+  // Routes
+app.use("/api/students", studentRoutes);
+
+module.exports = app;
