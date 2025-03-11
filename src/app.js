@@ -7,3 +7,9 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors()); // Added CORS
+
+// Default Route
+app.get("/", (req, res) => {
+    res.send("Student360 Backend is Running...");
+  });
+  
