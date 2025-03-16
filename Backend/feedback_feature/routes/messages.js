@@ -1,7 +1,10 @@
 const express = require('express');
-const Message = require('../controllers/messagesController');
-
 const router = express.Router();
+// const Message = require('../controllers/messagesController');
+const messagesController = require('../controllers/messagesController');
+
+
+
 
 router.get('/', messagesController.getMessages);
 router.post('/', messagesController.createMessage);
