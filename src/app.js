@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const studentRoutes = require("./routes/studentRoutes");
 const noticeRoutes = require("./routes/noticeRoutes");
+const messageRoutes = require("./routes/messages");
+const userRoutes = require("./routes/users");
 
 const app = express();
 
@@ -18,5 +20,7 @@ app.get("/", (req, res) => {
   // Routes
 app.use("/api/students", studentRoutes);
 app.use("/api/notices", noticeRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
 
 module.exports = app;
