@@ -18,7 +18,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
   List<Map<String, dynamic>> notices = [];
 
   @override
-  void initState(){
+  void initState() {
     _getNotices();
   }
 
@@ -26,22 +26,27 @@ class _NoticeBoardState extends State<NoticeBoard> {
     debugPrint("Getting notice");
     http.Response response = await getNotices();
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (response.statusCode == 200) {
       debugPrint("User data received ${response.body}");
 
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-      List<dynamic> jsonResponse = jsonDecode(response.body);
+      if (jsonResponse.containsKey("data")) {
+        List<dynamic> noticesData = jsonResponse["data"];
 
-      setState(() {
-
-        notices = jsonResponse.map((e) =>{
-          "title": e["title"] ?? "",
-          "content": e["content"] ?? "",
-          "date":e["date"] ?? ""
-        }).toList();
-      });
+        setState(() {
+          notices = noticesData.map((e) => {
+            "title": e["title"] ?? "",
+            "content": e["content"] ?? "",
+            "date": e["date"]?.toString().split("T")[0] ?? "",  // Format date
+          }).toList();
+        });
+      }
+    } else {
+      debugPrint("Failed to fetch notices: ${response.statusCode}");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +69,10 @@ class _NoticeBoardState extends State<NoticeBoard> {
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 5),
+            padding: const EdgeInsets.only(right: 0.0),
             child: Container(
-              width: 110,
-              height: 110,
+              width: 130,
+              height: 100,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/logo.png'),
