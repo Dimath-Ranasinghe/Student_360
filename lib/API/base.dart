@@ -3,13 +3,18 @@ import 'package:http/http.dart' as http;
 import 'basedata.dart';
 
 Future<http.Response> getNotices() async {
-  String url = "${Base.getNotice}";
-  print("getDailySummary url: $url");
-  return await http.get(Uri.parse(url), headers: <String, String>{
-    'Content-Type': 'application/json; charset=UTF-8',
+  String url = Base.getNotice;
 
-  });
+  try {
+    final response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    return response;
+  } catch (e) {
+    throw Exception("Failed to load notices");
+  }
 }
+
 
 Future<bool> postNotice(String title, String content) async {
   String url = Base.postNotice;
@@ -20,14 +25,48 @@ Future<bool> postNotice(String title, String content) async {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json'
       },
       body: json.encode({"title": title, "content": content}),
     );
 
-    return response.statusCode == 200 || response.statusCode == 201;
+    if (response.statusCode == 201) {
+      print("Notice posted successfully: ${response.body}");
+      return true;
+    } else {
+      print("Failed to post notice: ${response.body}");
+      return false;
+    }
   } catch (e) {
     print("Error posting notice: $e");
     return false;
   }
 }
+
+
+
+Future<bool> deleteNotice(String noticeId) async {
+  String url = "${Base.deleteNotice(noticeId)}";
+  print("Deleting notice with ID: $noticeId from: $url");
+
+  try {
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print("Notice deleted successfully");
+      return true;
+    } else {
+      print("Failed to delete notice: ${response.body}");
+      return false;
+    }
+  } catch (e) {
+    print("Error deleting notice: $e");
+    return false;
+  }
+}
+
+
