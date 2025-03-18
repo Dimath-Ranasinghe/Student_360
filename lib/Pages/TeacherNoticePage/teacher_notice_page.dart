@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:student360/Components/student_nav_bar.dart';
 import 'package:student360/Pages/TeacherNoticePage/TeacherNotice.dart';
 import 'package:http/http.dart' as http;
@@ -23,22 +24,57 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
     _getNotices();
   }
 
-  void _getNotices() async{
+  void _deleteNotice(TeacherNote notice) async {
+    bool isDeleted = await deleteNotice(notice.id);
+
+    if (isDeleted) {
+      setState(() {
+        TeacherNote.noticeList.removeWhere((element) => element.id == notice.id);
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text("Notice deleted successfully"),
+          backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to delete notice"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+
+
+  void _getNotices() async {
     debugPrint("Fetching Notices...");
     http.Response response = await getNotices();
 
-    if (response.statusCode == 200 || response.statusCode ==201){
-      debugPrint("Notices Received");
-      List<dynamic> jsonResponse = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      debugPrint("Notices Received: ${response.body}");
 
-      setState(() {
-        TeacherNote.noticeList =
-            jsonResponse.map((e) => TeacherNote.fromJson(e)).toList();
-      });
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse.containsKey("data")) {
+        List<dynamic> noticesData = jsonResponse["data"];
+
+        setState(() {
+          TeacherNote.noticeList = noticesData.map((e) => TeacherNote.fromJson(e)).toList();
+        });
+      }
     } else {
       debugPrint("Failed to fetch notices");
     }
   }
+
 
   void addNewNotice() {
     showDialog(context: context, builder: (context){
@@ -51,12 +87,12 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
           ),
         ),
         content: Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 0, left: 0, right: 0),
+          padding: const EdgeInsets.only(top: 4, bottom: 0, left: 0, right: 0),
           child: Container(
             height: MediaQuery
                 .of(context)
                 .size
-                .height * 0.5,
+                .height * 0.4,
             width: MediaQuery
                 .of(context)
                 .size
@@ -80,10 +116,10 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 TextField(
                   controller: contentController,
-                  maxLines: 8,
+                  maxLines: 7,
                   decoration: InputDecoration(
                     hintText: "Notice Content",
                     enabledBorder: OutlineInputBorder(
@@ -190,8 +226,6 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
   }
 
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,48 +273,64 @@ class _NoticeBoardState extends State<TeacherNoticePage> {
         child: ListView.builder(
           itemCount: TeacherNote.noticeList.length,
           itemBuilder: (context, index) {
-            final reversedList = TeacherNote.noticeList.reversed.toList();
-            final notice = reversedList[index];
-            return Card(
-              color: Colors.white,
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      notice.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+            final notice = TeacherNote.noticeList[index];
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(0),
+              child: Slidable(
+                key: ValueKey(notice.title),
+                endActionPane: ActionPane(
+                    motion: const StretchMotion(),
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) => _deleteNotice(notice),
+                        icon: Icons.delete,
+                        backgroundColor: Colors.red,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      notice.content,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        "Posted on: ${notice.dateTime.toLocal()}",
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                    ]
+                ),
+                child: Card(
+                  color: Colors.white,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          notice.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 5),
+                        Text(
+                          notice.content,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text(
+                            "Posted on: ${notice.dateTime.toLocal().toString().split(' ')[0]}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             );

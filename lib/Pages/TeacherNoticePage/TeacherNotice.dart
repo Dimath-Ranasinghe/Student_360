@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TeacherNote {
+  final String id;
   final String title;
   final String content;
   final DateTime dateTime;
 
   TeacherNote({
+    required this.id,
     required this.title,
     required this.content,
     required this.dateTime,
@@ -14,10 +16,12 @@ class TeacherNote {
   // Convert JSON response into a `TeacherNote` object
   factory TeacherNote.fromJson(Map<String, dynamic> json) {
     return TeacherNote(
+      id: json['_id'] ?? json['id'] ?? '',
       title: json["title"] ?? "",
       content: json["content"] ?? "",
-      dateTime: DateTime.tryParse(json["date"] ?? "") ??
-          DateTime.now(), // Use backend-generated date
+      dateTime: json["date"] != null
+          ? DateTime.parse(json["date"]).toLocal()
+          : DateTime.now(),
     );
   }
 
