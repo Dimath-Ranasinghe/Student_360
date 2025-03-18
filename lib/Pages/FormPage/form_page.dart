@@ -9,167 +9,190 @@ class FormPage extends StatefulWidget {
 }
 
 class _FormPageState extends State<FormPage> {
-  String? selectedValue;
-  final List<String> items = [
-    "John Doe", "Jane Smith", "Michael Johnson", "Emily Brown",
-    "William Davis", "Sophia Wilson", "James Anderson", "Olivia Martinez",
-    "Benjamin Thomas", "Charlotte Lee", "Daniel Harris", "Amelia Walker",
-    "Alexander Hall", "Mia Allen", "Matthew Young", "Ella King",
-    "Henry Wright", "Ava Scott", "Jackson Green", "Harper Adams"
-  ];
   final _formKey = GlobalKey<FormState>();
+  final _studentIdController = TextEditingController();
+  final Color primaryColor = const Color(0xFF1B69D7);
 
-  void _showStudentSelectionModal() {
+  String? selectedTerm, selectedGrade, selectedClass;
+  final terms = ["1st Term", "2nd Term", "3rd Term"];
+  final grades = ["1", "2", "3", "4", "5"];
+  final classes = ["A", "B", "C", "D"];
+
+  @override
+  void dispose() {
+    _studentIdController.dispose();
+    super.dispose();
+  }
+
+  void _showSelectionModal(List<String> items, Function(String) onSelect) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      ),
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 400,
-          child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(items[index]),
-                onTap: () {
-                  setState(() {
-                    selectedValue = items[index];
-                  });
-                  Navigator.pop(context);
-                },
-              );
-            },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      builder: (_) =>
+          ListView(
+            shrinkWrap: true,
+            children: items.map((item) =>
+                ListTile(
+                  title: Text(item, style: const TextStyle(fontSize: 16)),
+                  onTap: () {
+                    onSelect(item);
+                    Navigator.pop(context);
+                  },
+                )).toList(),
           ),
-        );
-      },
+    );
+  }
+
+  Widget _buildDropdown(String hint, String? value, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(25, 0, 0, 0),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              value ?? hint,
+              style: TextStyle(fontSize: 14,
+                  color: value == null ? Colors.grey : Colors.black),
+            ),
+            const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          ],
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
-        centerTitle: true,
+        backgroundColor: primaryColor,
         elevation: 0,
-        title: const Text(
-          "Notice Board",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
+        title: const Text("Record Book", style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
             child: Container(
-              width: 110,
-              height: 110,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/logo.png'),
-                  fit: BoxFit.cover,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(25, 0, 0, 0),
+                    blurRadius: 12,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Student ID Input
+                    TextFormField(
+                      controller: _studentIdController,
+                      style: const TextStyle(fontSize: 15),
+                      decoration: InputDecoration(
+                        labelText: "Student ID",
+                        prefixIcon: Icon(Icons.badge, color: primaryColor),
+                        border: OutlineInputBorder(borderRadius: BorderRadius
+                            .circular(12)),
+                      ),
+                      validator: (value) =>
+                      value!.isEmpty
+                          ? 'Enter Student ID'
+                          : null,
+                    ),
+                    const SizedBox(height: 12),
+
+
+                    _buildDropdown("Select Term", selectedTerm, () =>
+                        _showSelectionModal(terms, (val) =>
+                            setState(() => selectedTerm = val))),
+                    Row(
+                      children: [
+                        Expanded(child: _buildDropdown("Grade",
+                            selectedGrade, () =>
+                                _showSelectionModal(grades, (val) =>
+                                    setState(() => selectedGrade = val)))),
+                        const SizedBox(width: 12),
+                        Expanded(child: _buildDropdown("Class",
+                            selectedClass, () =>
+                                _showSelectionModal(classes, (val) =>
+                                    setState(() => selectedClass = val)))),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Subject Fields
+                    const FormBlocks(labelText: "English"),
+                    const FormBlocks(labelText: "Sinhalese"),
+                    const FormBlocks(labelText: "Buddhism"),
+                    const FormBlocks(labelText: "Mathematics"),
+                    const FormBlocks(labelText: "Environmental Studies"),
+                    const FormBlocks(labelText: "Total Days Held"),
+                    const FormBlocks(labelText: "Total Days Attended"),
+
+                    const SizedBox(height: 20),
+
+                    // Submit Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          elevation: 4,
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate() &&
+                              selectedTerm != null &&
+                              selectedGrade != null &&
+                              selectedClass != null) {
+                            // Submit action
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Center(
+                                  child: Text("Please complete all fields")
+                              )),
+                            );
+                          }
+                        },
+                        child: const Text("Submit", style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600)),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        child: Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(minHeight: 600),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 3,
-                offset: const Offset(0, 4),
-              )
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: GestureDetector(
-                  onTap: _showStudentSelectionModal,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          selectedValue ?? "Select a Student",
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                        Icon(Icons.arrow_drop_down, color: Colors.black),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: [
-                      FormBlocks(hintText: "English"),
-                      FormBlocks(hintText: "Sinhalese"),
-                      FormBlocks(hintText: "Buddhism"),
-                      FormBlocks(hintText: "Maths"),
-                      FormBlocks(hintText: "Environmental studies"),
-                      FormBlocks(hintText: "Total Days Held"),
-                      FormBlocks(hintText: "Total Days Attend"),
-                    ],
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
-                    },
-                    child: const Text(
-                      "Submit",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
