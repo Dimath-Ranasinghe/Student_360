@@ -11,6 +11,14 @@ class FormPage extends StatefulWidget {
 class _FormPageState extends State<FormPage> {
   final _formKey = GlobalKey<FormState>();
   final _studentIdController = TextEditingController();
+  final TextEditingController englishController = TextEditingController();
+  final TextEditingController sinhaleseController = TextEditingController();
+  final TextEditingController buddhismController = TextEditingController();
+  final TextEditingController mathematicsController = TextEditingController();
+  final TextEditingController environmentalStudiesController = TextEditingController();
+  final TextEditingController totalDaysHeldController = TextEditingController();
+  final TextEditingController totalDaysAttendedController = TextEditingController();
+
   final Color primaryColor = const Color(0xFF1B69D7);
 
   String? selectedTerm, selectedGrade, selectedClass;
@@ -27,13 +35,15 @@ class _FormPageState extends State<FormPage> {
   void _showSelectionModal(List<String> items, Function(String) onSelect) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       builder: (_) =>
           ListView(
             shrinkWrap: true,
             children: items.map((item) =>
                 ListTile(
-                  title: Text(item, style: const TextStyle(fontSize: 16)),
+                  title: Text(item, style: const TextStyle(
+                      fontSize: 17, color: Colors.black)),
                   onTap: () {
                     onSelect(item);
                     Navigator.pop(context);
@@ -66,10 +76,12 @@ class _FormPageState extends State<FormPage> {
           children: [
             Text(
               value ?? hint,
-              style: TextStyle(fontSize: 14,
-                  color: value == null ? Colors.grey : Colors.black),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: value == null ? Colors.grey.shade700 : Colors.black),
             ),
-            const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+            const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black),
           ],
         ),
       ),
@@ -79,12 +91,37 @@ class _FormPageState extends State<FormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Theme
+          .of(context)
+          .scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: primaryColor,
-        elevation: 0,
-        title: const Text("Record Book", style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
         centerTitle: true,
+        elevation: 0,
+        title: const Text(
+          "Form Page",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 5),
+            child: Container(
+              width: 110,
+              height: 110,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -113,12 +150,25 @@ class _FormPageState extends State<FormPage> {
                     // Student ID Input
                     TextFormField(
                       controller: _studentIdController,
-                      style: const TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 15,),
                       decoration: InputDecoration(
                         labelText: "Student ID",
+                        labelStyle: const TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold
+                        ),
+                        floatingLabelStyle: const TextStyle(
+                            color: Color.fromRGBO(27, 105, 215, 1)),
                         prefixIcon: Icon(Icons.badge, color: primaryColor),
-                        border: OutlineInputBorder(borderRadius: BorderRadius
-                            .circular(12)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: const BorderSide(
+                            color: Color.fromRGBO(27, 105, 215, 1),
+                            width: 2.0,
+                          ),
+                        ),
                       ),
                       validator: (value) =>
                       value!.isEmpty
@@ -148,13 +198,24 @@ class _FormPageState extends State<FormPage> {
                     const SizedBox(height: 12),
 
                     // Subject Fields
-                    const FormBlocks(labelText: "English"),
-                    const FormBlocks(labelText: "Sinhalese"),
-                    const FormBlocks(labelText: "Buddhism"),
-                    const FormBlocks(labelText: "Mathematics"),
-                    const FormBlocks(labelText: "Environmental Studies"),
-                    const FormBlocks(labelText: "Total Days Held"),
-                    const FormBlocks(labelText: "Total Days Attended"),
+                    FormBlocks(
+                      labelText: "English",
+                      textEditingController: englishController,),
+                    FormBlocks(
+                      labelText: "Sinhalese",
+                      textEditingController: sinhaleseController,),
+                    FormBlocks(
+                      labelText: "Buddhism",
+                      textEditingController: buddhismController,),
+                    FormBlocks(
+                      labelText: "Mathematics",
+                      textEditingController: mathematicsController,),
+                    FormBlocks(
+                      labelText: "Total Days Held",
+                      textEditingController: totalDaysHeldController,),
+                    FormBlocks(
+                      labelText: "Total Days Attended",
+                      textEditingController: totalDaysAttendedController,),
 
                     const SizedBox(height: 20),
 
@@ -176,10 +237,15 @@ class _FormPageState extends State<FormPage> {
                               selectedClass != null) {
                             // Submit action
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Center(
-                                  child: Text("Please complete all fields")
-                              )),
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              content: Center(child: Text(
+                                  "Please Complete all the Fields")),
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            )
                             );
                           }
                         },

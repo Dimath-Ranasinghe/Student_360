@@ -20,9 +20,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (userID.length == 6) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => StudentNavBar()));
+      _userIDController.clear();
     } else if (userID.length == 5) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => TeacherNavBar()));
+      _userIDController.clear();
     } else{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,

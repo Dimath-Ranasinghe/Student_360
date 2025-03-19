@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class FormBlocks extends StatelessWidget {
   final String labelText;
+  final TextEditingController textEditingController;
 
   const FormBlocks({
     super.key,
     required this.labelText,
+    required this.textEditingController
   });
 
   @override
