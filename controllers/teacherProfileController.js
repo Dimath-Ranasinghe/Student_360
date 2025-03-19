@@ -1,124 +1,48 @@
-// const TeacherProfile = require('../models/TeacherProfile');
-
-// // Function to create a new teacher profile
-// exports.createProfile = async (req, res) => {
-//     try {
-//         // Validate fields
-//         const {name, email, phone} = req.body;
-//         if (!name || !email || !phone) {
-//             return res.status(400).json({message: 'Name, email and phone are required!'});
-//         }
-
-//         // Check if profile already exists
-//         const existingProfile = await TeacherProfile.findOne({ email });
-//         if (existingProfile) {
-//             return res.status(409).json({ message: 'A profile with this email already exists!' });
-//         }
-
-//         // Create new profile
-//         const newProfile = new TeacherProfile(req.body);
-//         // Save the profile to the database
-//         const savedProfile = await newProfile.save();
-//         // Send a success message with the saved profile
-//         res.status(201).json(savedProfile);
-
-//     } catch (error) {
-//         // Handle errors and send an error message
-//         res.status(500).json({message: 'Erroe creating profile.', error: error.message});
-//     }
-// };
-
-// // Function to get all teacher profiles
-// exports.getAllProfiles = async (req, res) => {
-//     try {
-//         // Get all teacher profiles from the database
-//         const profiles = await TeacherProfile.find();
-//         if (!profiles.length) {
-//             return res.status(404).json({message: 'No profiles found!'});
-//         }
-
-//         // Sends success message 
-//         res.status(200).json(profiles);
-
-//     } catch (error) {
-//         // Sends error message
-//         res.status(500).json({message: 'Error retrieving profiles', error: error.message});
-//     }
-// };
-
-// // Function to update an existing teacher profile
-// exports.updateProfile = async (req, res) => {
-//     try {
-//         if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-//             return res.status(400).json({message: 'Invalid profile ID format!'});
-//         }
-
-//         // Find the profile by ID and update it with the request body data
-//         const updatedProfile = await TeacherProfile.findByIdAndUpdate(
-//             req.params.id,
-//             req.body,
-//             { new: true, runValidators: true } // Return updated profile and run validators
-//         );
-
-//         if (!updatedProfile) {
-//             return res.status(404).json({message: 'Profile not found!'});
-//         }
-
-//         res.status(200).json(updatedProfile);
-//     } catch (error) {
-//         res.status(500).json({message: 'Error updating profile', error: error.message});
-//     }
-// };
-
-// // Function to get single profile by ID
-// exports.getProfileById = async (req, res) => {
-//     try {
-//         if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-//             return res.status(400).json({message: 'Invalid profile ID format!'});
-//         }
-
-//         const profile = await TeacherProfile.findById(req.params.id);
-//         if (!profile) {
-//             return res.status(404).json({message: 'Profile not found!'});
-//         }
-
-//         res.status(200).json(profile);
-//     } catch (error) {
-//         res.status(500).json({message: 'Error retrieving profile', error: error.message});
-//     }
-// };
-
-// // Function to delete profile
-// exports.deleteProfile = async (req, res) => {
-//     try {
-//         if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-//             return res.status(400).json({message: 'Invalid profile ID format!'});
-//         }
-
-//         const deletedProfile = await TeacherProfile.findByIdAndDelete(req.params.id);
-//         if (!deletedProfile) {
-//             return res.status(404).json({message: 'Profile not found!'});
-//         }
-
-//         res.status(200).json({message: 'Profile deleted successfully!'});
-//     } catch (error) {
-//         res.status(500).json({message: 'Error deleting profile!', error: error.message});
-//     }
-// };
-
-
-
+const mongoose = require('mongoose');
 const TeacherProfile = require('../models/TeacherProfile');
 
 // Create a new teacher profile
 exports.createProfile = async (req, res) => {
     try {
-        const newProfile = new TeacherProfile(req.body);
+        // Validate required fields
+        const { fullName, email, phone } = req.body;
+        if (!fullName || !email || !phone) {
+            return res.status(400).json({ msg: 'Full name, email, and phone are required fields' });
+        }
+
+        // Check if profile already exists with this email - ensure we normalize the email
+        const normalizedEmail = email.toLowerCase().trim();
+        const existingProfile = await TeacherProfile.findOne({ email: normalizedEmail });
+        if (existingProfile) {
+            return res.status(409).json({ msg: 'A profile with this email already exists' });
+        }
+
+        // Create the new profile with normalized email
+        const profileData = {
+            ...req.body,
+            email: normalizedEmail
+        };
+        
+        const newProfile = new TeacherProfile(profileData);
         const savedProfile = await newProfile.save();
         res.status(201).json(savedProfile);
     } catch (error) {
-        console.error(error.message);
-        res.status(500).send('Server Error');
+        console.error('Profile creation error:', error);
+        
+        // Check for MongoDB duplicate key error (code 11000)
+        if (error.code === 11000) {
+            return res.status(409).json({ 
+                msg: 'A profile with this email already exists',
+                detail: error.message 
+            });
+        }
+        
+        // Handle mongoose validation errors
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ msg: 'Validation error', errors: error.errors });
+        }
+        
+        res.status(500).json({ msg: 'Server Error', error: error.message });
     }
 };
 
@@ -126,16 +50,27 @@ exports.createProfile = async (req, res) => {
 exports.getAllProfiles = async (req, res) => {
     try {
         const profiles = await TeacherProfile.find();
+        
+        // Optional: Check if any profiles were found
+        if (!profiles.length) {
+            return res.status(404).json({ msg: 'No profiles found' });
+        }
+        
         res.json(profiles);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: 'Server Error', error: error.message });
     }
 };
 
 // Get a specific teacher profile by ID
 exports.getProfileById = async (req, res) => {
     try {
+        // Check if ID is valid MongoDB ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ msg: 'Invalid profile ID format' });
+        }
+        
         const profile = await TeacherProfile.findById(req.params.id);
         
         if (!profile) {
@@ -145,20 +80,39 @@ exports.getProfileById = async (req, res) => {
         res.json(profile);
     } catch (error) {
         console.error(error.message);
-        if (error.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Profile not found' });
-        }
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: 'Server Error', error: error.message });
     }
 };
 
 // Update a teacher profile
 exports.updateProfile = async (req, res) => {
     try {
+        // Check if ID is valid MongoDB ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ msg: 'Invalid profile ID format' });
+        }
+        
+        // Normalize email if present in update data
+        const updateData = { ...req.body };
+        if (updateData.email) {
+            // First check if the new email exists on another document
+            const normalizedEmail = updateData.email.toLowerCase().trim();
+            const existingProfile = await TeacherProfile.findOne({ 
+                email: normalizedEmail,
+                _id: { $ne: req.params.id } // Exclude current profile
+            });
+            
+            if (existingProfile) {
+                return res.status(409).json({ msg: 'Another profile with this email already exists' });
+            }
+            
+            updateData.email = normalizedEmail;
+        }
+        
         const profile = await TeacherProfile.findByIdAndUpdate(
             req.params.id,
-            req.body,
-            { new: true }
+            updateData,
+            { new: true, runValidators: true } // Enable validation on update
         );
         
         if (!profile) {
@@ -168,14 +122,32 @@ exports.updateProfile = async (req, res) => {
         res.json(profile);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send('Server Error');
+        
+        // Check for MongoDB duplicate key error (code 11000)
+        if (error.code === 11000) {
+            return res.status(409).json({ 
+                msg: 'Another profile with this email already exists',
+                detail: error.message 
+            });
+        }
+        
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ msg: 'Validation error', errors: error.errors });
+        }
+        
+        res.status(500).json({ msg: 'Server Error', error: error.message });
     }
 };
 
 // Delete a teacher profile
 exports.deleteProfile = async (req, res) => {
     try {
-        const profile = await TeacherProfile.findByIdAndRemove(req.params.id);
+        // Check if ID is valid MongoDB ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ msg: 'Invalid profile ID format' });
+        }
+        
+        const profile = await TeacherProfile.findByIdAndDelete(req.params.id);
         
         if (!profile) {
             return res.status(404).json({ msg: 'Profile not found' });
@@ -184,9 +156,6 @@ exports.deleteProfile = async (req, res) => {
         res.json({ msg: 'Profile removed' });
     } catch (error) {
         console.error(error.message);
-        if (error.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Profile not found' });
-        }
-        res.status(500).send('Server Error');
+        res.status(500).json({ msg: 'Server Error', error: error.message });
     }
 };
