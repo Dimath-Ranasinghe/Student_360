@@ -17,10 +17,11 @@ app.get("/", (req, res) => {
   });
 
   
-  // Routes
+// Routes
 app.use("/api/students", studentRoutes);
 app.use("/api/notices", noticeRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
+app.use('/api/teachers', teacherProfileRoutes);
 
 module.exports = app;
