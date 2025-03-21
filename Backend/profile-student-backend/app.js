@@ -12,7 +12,16 @@ app.use(express.json());
 // Home route
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to Student 360'
+    message: 'Welcome to the Primary School Student Profile API'
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    error: 'Server Error'
   });
 });
 
