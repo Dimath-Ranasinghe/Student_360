@@ -1,5 +1,7 @@
 const StudentRecord = require("../models/StudentRecord");
 
+const FIXED_SUBJECTS=["Mathematics", "English", "Language", "Religion", "Environmental Studies"];
+
 // Enter or update student marks
 const enterMarks = async (req, res) => {
   try {
@@ -7,22 +9,34 @@ const enterMarks = async (req, res) => {
     if (!studentID || !grade || !className || !language || !religion || !term || !subjects || !totalDaysHeld || !totalDaysAttended) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+
+    // Ensure fixed subjects are present, add if missing
+    const subjectsWithFixed = FIXED_SUBJECTS.map(subject => {
+      const existing =subjects.find(s => s.subjectName === subject);
+      return existing || {subjectName : subject, marks:0};
+    });
+
+    // Include additional subjects provided by the teacher
+    const finalSubjects = [
+      ...subjectsWithFixed,
+      ...subjects.filter(s => !FIXED_SUBJECTS.includes(s.subjectName))
+    ];
     
-    const totalMarks = subjects.reduce((sum, subject) => sum + subject.marks, 0);
-    const average = subjects.length > 0 ? totalMarks / subjects.length : 0;
+    const totalMarks = finalSubjects.reduce((sum, subject) => sum + subject.marks, 0);
+    const average = finalSubjects.length > 0 ? totalMarks / finalSubjects.length : 0;
 
     let student = await StudentRecord.findOne({ studentID });
 
     if (!student) {
-      student = new StudentRecord({ studentID, grade, class: className, language, religion, terms: [] });
+      student = new StudentRecord({ studentID, grade, class: className, terms: [] });
     }
 
-    const termIndex = student.terms.findIndex((t) => t.term === term);
+    const termIndex = student.terms.findIndex(t => t.term === term);
 
     if (termIndex !== -1) {
-      student.terms[termIndex] = { term, subjects, totalMarks, average, totalDaysHeld, totalDaysAttended };
+      student.terms[termIndex] = { term, subjects: finalSubjects, totalMarks, average, totalDaysHeld, totalDaysAttended };
     } else {
-      student.terms.push({ term, subjects, totalMarks, average, totalDaysHeld, totalDaysAttended });
+      student.terms.push({ term, subjects: finalSubjects, totalMarks, average, totalDaysHeld, totalDaysAttended });
     }
 
     await student.save();
