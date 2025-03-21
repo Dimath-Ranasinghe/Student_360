@@ -6,6 +6,16 @@ const StudentProfileSchema = new mongoose.Schema({
     required: [true, 'Please add student name'],
     trim: true
   },
+  contactNumber: {
+    father: {
+      type: String,
+      required: [true, 'Please add father\'s contact number']
+    },
+    mother: {
+      type: String,
+      required: [true, 'Please add mother\'s contact number']
+    }
+  },
   email: {
     type: String,
     required: [true, 'Please add an email address'],
@@ -17,6 +27,11 @@ const StudentProfileSchema = new mongoose.Schema({
   birthday: {
     type: Date,
     required: [true, 'Please add date of birth']
+  },
+  bloodType: {
+    type: String,
+    required: [true, 'Please add blood type'],
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
   }
 });
 
