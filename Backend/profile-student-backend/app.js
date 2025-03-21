@@ -11,18 +11,18 @@ app.use(express.json());
 
 // Home route
 app.get('/', (req, res) => {
-  res.json({
+    res.json({
     message: 'Welcome to Student 360'
   });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    error: 'Server Error'
-  });
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        error: 'Server Error'
+    });
 });
 
 module.exports = app;
