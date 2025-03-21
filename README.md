@@ -1,4 +1,4 @@
-# student360
+# student360_profile
 
 A new Flutter project.
 

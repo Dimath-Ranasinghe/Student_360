@@ -1,2 +1,0 @@
-/Users/rst0460/Documents/GitHub/Student_360/android/app/.cxx/Debug/2s2t3q6q/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/rst0460/Documents/GitHub/Student_360/android/app/.cxx/Debug/2s2t3q6q/armeabi-v7a/CMakeFiles/rebuild_cache.dir

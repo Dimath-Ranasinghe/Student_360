@@ -1,6 +1,6 @@
 {
-    "name": "student360",
-    "short_name": "student360",
+    "name": "student360_profile",
+    "short_name": "student360_profile",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
