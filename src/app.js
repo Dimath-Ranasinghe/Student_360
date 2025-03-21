@@ -4,6 +4,7 @@ const studentRoutes = require("./routes/studentRoutes");
 const noticeRoutes = require("./routes/noticeRoutes");
 const messageRoutes = require("./routes/messages");
 const userRoutes = require("./routes/users");
+const teacherProfileRoutes = require("./routes/teacherProfileRoutes");
 
 const app = express();
 
