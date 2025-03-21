@@ -128,3 +128,46 @@ exports.createStudentProfile = async (req, res) => {
       });
     }
 };  
+
+// Update student profile
+exports.updateStudentProfile = async (req, res) => {
+    try {
+        let student = await StudentProfile.findById(req.params.id);
+        
+        if (!student) {
+            return res.status(404).json({
+            success: false,
+            message: 'Student profile not found'
+            });
+        }
+        
+        // If updating email, check if it already exists for another student
+        if (req.body.email && req.body.email !== student.email) {
+            const existingStudent = await StudentProfile.findOne({ email: req.body.email });
+            
+            if (existingStudent && existingStudent._id.toString() !== req.params.id) {
+            return res.status(400).json({
+                success: false,
+                message: 'A student with this email already exists'
+            });
+            }
+        }
+        
+        // Update student
+        student = await StudentProfile.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+        
+        res.status(200).json({
+            success: true,
+            data: student
+        });
+
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+};
