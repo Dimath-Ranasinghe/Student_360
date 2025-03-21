@@ -171,3 +171,39 @@ exports.updateStudentProfile = async (req, res) => {
       });
     }
 };
+
+// Delete student profile
+exports.deleteStudentProfile = async (req, res) => {
+    try {
+        const student = await StudentProfile.findById(req.params.id);
+        
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: 'Student profile not found'
+            });
+        }
+        
+        // Remove custom profile image if not the default
+        if (student.profileImage !== 'default-student.png') {
+            const imagePath = path.join(__dirname, '../public/uploads', student.profileImage);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+        
+        await student.deleteOne();
+        
+        res.status(200).json({
+            success: true,
+            data: {}
+        });
+      
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
+    }
+};  
