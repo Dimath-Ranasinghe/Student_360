@@ -207,3 +207,80 @@ exports.deleteStudentProfile = async (req, res) => {
         });
     }
 };  
+
+// Upload student profile image
+exports.uploadStudentPhoto = async (req, res) => {
+    try {
+        const student = await StudentProfile.findById(req.params.id);
+        
+        if (!student) {
+            return res.status(404).json({
+            success: false,
+            message: 'Student profile not found'
+            });
+        }
+      
+        // Check if file was uploaded
+        if (!req.files || !req.files.file) {
+            return res.status(400).json({
+            success: false,
+            message: 'Please upload a file'
+            });
+        }
+      
+        const file = req.files.file;
+        
+        // Check file type
+        if (!file.mimetype.startsWith('image')) {
+            return res.status(400).json({
+            success: false,
+            message: 'Please upload an image file'
+            });
+        }
+      
+        // Check file size
+        if (file.size > process.env.MAX_FILE_SIZE) {
+            return res.status(400).json({
+            success: false,
+            message: `Please upload an image less than ${process.env.MAX_FILE_SIZE / 1000000} MB`
+            });
+        }
+      
+        // Create custom filename
+        file.name = `student_${student._id}${path.parse(file.name).ext}`;
+        
+        // Remove old profile image if not the default
+        if (student.profileImage !== 'default-student.png') {
+            const oldImagePath = path.join(__dirname, '../public/uploads', student.profileImage);
+            if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+            }
+        }
+      
+        // Move file to uploads folder
+        file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Problem with file upload'
+                });
+            }
+        
+            // Update database
+            await StudentProfile.findByIdAndUpdate(req.params.id, { profileImage: file.name });
+            
+            res.status(200).json({
+            success: true,
+            data: file.name
+            });
+        });
+        
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+      });
+    }
+};
