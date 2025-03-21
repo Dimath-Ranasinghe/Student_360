@@ -1,3 +1,7 @@
+const StudentProfile = require('../models/StudentProfile');
+const path = require('path');
+const fs = require('fs');
+
 // Get all student profiles
 exports.getStudentProfiles = async (req, res) => {
     try {
@@ -275,7 +279,7 @@ exports.uploadStudentPhoto = async (req, res) => {
             data: file.name
             });
         });
-        
+
     } catch (err) {
         res.status(500).json({
             success: false,
