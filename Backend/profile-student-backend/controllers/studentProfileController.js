@@ -54,14 +54,12 @@ exports.getStudentProfiles = async (req, res) => {
             limit
             };
         }
-      
         if (startIndex > 0) {
             pagination.prev = {
             page: page - 1,
             limit
             };
-        }
-              
+        }      
         res.status(200).json({
             success: true,
             count: students.length,
@@ -103,4 +101,30 @@ exports.getStudentProfile = async (req, res) => {
         });
     }
 };
-  
+
+// Create student profile
+exports.createStudentProfile = async (req, res) => {
+    try {
+        // Check if student with same email already exists
+        const existingStudent = await StudentProfile.findOne({ email: req.body.email });
+        
+        if (existingStudent) {
+            return res.status(400).json({
+            success: false,
+            message: 'A student with this email already exists'
+            });
+        }
+      
+        const student = await StudentProfile.create(req.body);
+        res.status(201).json({
+            success: true,
+            data: student
+        });
+
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+};  
