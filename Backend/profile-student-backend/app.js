@@ -12,7 +12,7 @@ app.use(express.json());
 // Home route
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to the Primary School Student Profile API'
+    message: 'Welcome to Student 360'
   });
 });
 
