@@ -1,3 +1,4 @@
+// Get all student profiles
 exports.getStudentProfiles = async (req, res) => {
     try {
         let query;
@@ -42,7 +43,6 @@ exports.getStudentProfiles = async (req, res) => {
         
         query = query.skip(startIndex).limit(limit);
       
-        // Executing query
         const students = await query;
         
         // Pagination result
@@ -77,3 +77,30 @@ exports.getStudentProfiles = async (req, res) => {
         });
     }
 };
+
+// Get a single student profile
+exports.getStudentProfile = async (req, res) => {
+    try {
+        const student = await StudentProfile.findById(req.params.id);
+      
+        if (!student) {
+            return res.status(404).json({
+            success: false,
+            message: 'Student profile not found'
+            });
+        }
+      
+        res.status(200).json({
+            success: true,
+            data: student
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
+    }
+};
+  
