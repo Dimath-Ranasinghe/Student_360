@@ -7,23 +7,29 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFF1E1E1E), // Dark background color
       appBar: AppBar(
-        backgroundColor: Color(0xFF1869D4), // Blue header
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/logo.png', // Replace with your logo image
-              height: 30,
-            ),
-            SizedBox(width: 8),
-            Text('STUDENT 360°'),
-          ],
-        ),
+        backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
         centerTitle: true,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.white),
+          icon: Icon(Icons.menu, color: Colors.white), 
           onPressed: () {}, // Handle menu button press
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 0.0),
+            child: Container(
+              width: 130,
+              height: 100,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Container(
@@ -70,9 +76,13 @@ class ProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 16),
               ProfileDetail(title: "Name", value: "Sasan Weerasinghe"),
-              ProfileDetail(title: "Contact number", value: "072 1234 567"),
+              ProfileDetail(title: "Contact number 1", value: "072 1234 567"),
+              ProfileDetail(title: "Contact number 2", value: "074 1234 567"),
               ProfileDetail(title: "Email Address", value: "sasa@mail.com"),
               ProfileDetail(title: "Class", value: "5-C"),
+              ProfileDetail(title: "Date of birth", value: "2015-02-20"),
+              ProfileDetail(title: "Class teacher", value: "Mr. Sumith"),
+              ProfileDetail(title: "Blood type", value: "O+"),
             ],
           ),
         ),

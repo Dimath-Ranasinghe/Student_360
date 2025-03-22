@@ -12,9 +12,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final picker = ImagePicker();
 
   TextEditingController nameController = TextEditingController(text: "Sasan Weerasinghe");
-  TextEditingController contactController = TextEditingController(text: "072 1234 567");
+  TextEditingController contact1Controller = TextEditingController(text: "072 1234 567");
+  TextEditingController contact2Controller = TextEditingController(text: "074 1234 567");
   TextEditingController emailController = TextEditingController(text: "sasa@mail.com");
   TextEditingController classController = TextEditingController(text: "5-C");
+  TextEditingController dobController = TextEditingController(text: "2015-02-20");
+  TextEditingController classteacherController = TextEditingController(text: "Mr. Sumith");
+  TextEditingController bloodtypeController = TextEditingController(text: "O+");
 
   Future pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -39,8 +43,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           builder: (context, constraints) {
             double size = constraints.maxWidth * 0.8; // Make height = width
             return Container(
-              width: size,
-              height: size, // Keep it square
+              width: 300,
+              height: 700,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Color(0xFFD9D9D9), // Light gray profile card
@@ -74,9 +78,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SizedBox(height: 16),
                     ProfileEditField(label: "Name", controller: nameController),
-                    ProfileEditField(label: "Contact number", controller: contactController),
+                    ProfileEditField(label: "Contact number 1", controller: contact1Controller),
+                    ProfileEditField(label: "Contact number 2", controller: contact2Controller),
                     ProfileEditField(label: "Email Address", controller: emailController),
-                    ProfileEditField(label: "Class", controller: classController),
+                    ProfileEditField(label: "Date of birth", controller: dobController),
+                    ProfileEditField(label: "Blood type", controller: bloodtypeController),
                     SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
