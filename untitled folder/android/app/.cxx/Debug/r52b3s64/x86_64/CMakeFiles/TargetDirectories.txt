@@ -1,0 +1,2 @@
+/Users/rst0460/Documents/GitHub/Student_360/android/app/.cxx/Debug/r52b3s64/x86_64/CMakeFiles/edit_cache.dir
+/Users/rst0460/Documents/GitHub/Student_360/android/app/.cxx/Debug/r52b3s64/x86_64/CMakeFiles/rebuild_cache.dir

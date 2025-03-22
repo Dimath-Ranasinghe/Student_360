@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.student360_profile.app-mergeDebugResources-24:/values-night-v8/values-night-v8.xml",
+            "outputFile": "com.example.teacher_profile.app-mergeDebugResources-24:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
                     "source": "/Users/rst0460/Documents/GitHub/Student_360/android/app/src/main/res/values-night/styles.xml",
