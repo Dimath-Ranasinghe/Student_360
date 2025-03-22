@@ -12,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.white), 
+          icon: Icon(Icons.menu, color: Colors.white),
           onPressed: () {}, // Handle menu button press
         ),
         actions: [
@@ -83,6 +83,33 @@ class ProfileScreen extends StatelessWidget {
               ProfileDetail(title: "Date of birth", value: "2015-02-20"),
               ProfileDetail(title: "Class teacher", value: "Mr. Sumith"),
               ProfileDetail(title: "Blood type", value: "O+"),
+
+              // Added Spacer to push logout button to bottom
+              Spacer(),
+
+              // Logout Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
+                  foregroundColor: Colors.white,
+                  minimumSize: Size(double.infinity, 45),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  // Add logout functionality here
+                  // For example: Navigate to login screen
+                  // Navigator.pushReplacementNamed(context, '/login');
+                },
+                child: Text(
+                  "LOGOUT",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -36,7 +36,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: Color(0xFF1E1E1E), // Dark background
       appBar: AppBar(
         backgroundColor: Color(0xFF1869D4), // Blue header
-        title: Text('Edit Profile'),
       ),
       body: Center(
         child: LayoutBuilder(
