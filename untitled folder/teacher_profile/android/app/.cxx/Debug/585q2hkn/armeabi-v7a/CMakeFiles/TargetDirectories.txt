@@ -1,0 +1,2 @@
+/Users/rst0460/Documents/GitHub/Student_360/teacher_profile/android/app/.cxx/Debug/585q2hkn/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/rst0460/Documents/GitHub/Student_360/teacher_profile/android/app/.cxx/Debug/585q2hkn/armeabi-v7a/CMakeFiles/rebuild_cache.dir
