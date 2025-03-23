@@ -42,8 +42,12 @@ const enterMarks = async (req, res) => {
       return res.status(404).json({ message: "Student not found in the school database." });
     }
 
+    console.log("Received Data from Flutter:", req.body);  
+    console.log("Stored Student Data from MongoDB:", existingStudent);
+    const gradeAsInt = parseInt(grade, 10);
+
     // Validate grade and class
-    if (existingStudent.grade !== grade || existingStudent.class !== className) {
+    if (existingStudent.grade !== gradeAsInt || existingStudent.class !== className) {
       return res.status(400).json({ message: "Grade or Class does not match the school records." });
     }
 
