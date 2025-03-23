@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:student360/Pages/FormPage/form_page.dart';
-import 'package:student360/Pages/ProfilePage/profile_page.dart';
+import 'package:student360/Pages/ProfilePage/profile_screen.dart';
 
 import '../Pages/Feedbacks/feedback_page.dart';
 import '../Pages/RecordBook//record_book.dart';
@@ -22,7 +22,7 @@ class _StudentNavBarState extends State<StudentNavBar> {
     RecordBook(),
     NoticeBoard(),
     FeedbackScreen(),
-    ProfilePage()
+    ProfileScreen()
   ];
 
   @override
