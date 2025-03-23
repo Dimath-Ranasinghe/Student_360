@@ -9,7 +9,7 @@ class RecordBook extends StatefulWidget {
 
 class _RecordBookState extends State<RecordBook> {
   List<List<String>> records = [
-    ["English", "20", "30", "50"],
+    ["English", "20", "30", "5"],
     ["Sinhala", "20", "20", "20"],
     ["Buddhism", "20", "20", "20"],
     ["Maths", "20", "20", "20"],
