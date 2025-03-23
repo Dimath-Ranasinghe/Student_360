@@ -112,7 +112,23 @@ StudentProfileSchema.virtual('formattedBirthday').get(function() {
     }
   
     return `${day}${suffix} ${month} ${year}`;
-    });
+});
+
+// Create formatted age virtual
+StudentProfileSchema.virtual('age').get(function() {
+    if (!this.birthday) return null;
+    
+    const today = new Date();
+    const birthDate = new Date(this.birthday);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    
+    return age;
+});
 
 // Set updatedAt before save
 StudentProfileSchema.pre('save', function(next) {
