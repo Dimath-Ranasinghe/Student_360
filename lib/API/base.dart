@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'basedata.dart';
 
 Future<http.Response> getNotices() async {
-  String url = Base.getNotice;
+  String url = Base.getNotices;
 
   try {
     final response = await http.get(Uri.parse(url), headers: {
