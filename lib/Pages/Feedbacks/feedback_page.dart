@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-
-/// A simple model for chat messages.
-class ChatMessage {
-  final String text;
-  final bool isSender; // true if sent by teacher, false if by student
-
-  ChatMessage({required this.text, required this.isSender});
-}
+import 'package:your_project/services/feedback_service.dart'; // Import the FeedbackService class
+import 'package:your_project/services/socket_service.dart';   // Import the SocketService class
 
 class FeedbackScreen extends StatefulWidget {
   const FeedbackScreen({Key? key}) : super(key: key);
@@ -16,95 +10,63 @@ class FeedbackScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
-  // Declare controllers for search and message input.
-  final TextEditingController _searchController = TextEditingController();
+  final SocketService _socketService = SocketService(); // Initialize SocketService
+  final FeedbackService _feedbackService = FeedbackService(); // Initialize FeedbackService
   final TextEditingController _messageController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
-  // Sample messages.
-  final List<ChatMessage> _messages = [
-    ChatMessage(text: 'Hello, how was the project?', isSender: true),
-    ChatMessage(text: 'Sure, I will check it out.', isSender: false),
-    ChatMessage(text: 'Let me know if you have questions.', isSender: true),
-  ];
+  List<dynamic> _messages = [];
+  String currentUser = 'teacher123'; // Example, replace with actual user ID
+  String selectedUser = 'student456'; // Example, replace with actual selected user ID
 
-  void _sendMessage() {
-    final text = _messageController.text.trim();
-    if (text.isEmpty) return;
-    setState(() {
-      _messages.add(ChatMessage(text: text, isSender: true));
+  @override
+  void initState() {
+    super.initState();
+    _socketService.connect(); // Connect to the server on widget initialization
+    _socketService.socket.on('receiveMessage', (data) {
+      setState(() {
+        _messages.add(data);  // Add the received message to the list
+      });
     });
-    _messageController.clear();
-    // TODO: Connect to backend for real-time messaging.
+    _loadMessages(); // Load initial messages from the backend
   }
 
-  Widget _buildMessageBubble(ChatMessage message) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment:
-        message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12.0),
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.7,
-            ),
-            decoration: BoxDecoration(
-              color: message.isSender ? Colors.blue : Colors.grey[300],
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Text(
-              message.text,
-              style: TextStyle(
-                color: message.isSender ? Colors.white : Colors.black87,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  // Fetch messages from the backend using the FeedbackService
+  void _loadMessages() async {
+    try {
+      final messages = await _feedbackService.fetchMessages(currentUser, selectedUser);
+      setState(() {
+        _messages = messages;
+      });
+    } catch (e) {
+      print('Error fetching messages: $e');
+    }
+  }
+
+  // Send a message using Socket.IO
+  void _sendMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
+
+    _socketService.sendMessage(text, currentUser, selectedUser);
+    _messageController.clear(); // Clear the message input field
+  }
+
+  @override
+  void dispose() {
+    _socketService.disconnect(); // Disconnect from the server when the widget is disposed
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Updated AppBar with custom design.
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(27, 105, 215, 1),
-        centerTitle: true,
-        elevation: 0,
-        title: const Text(
-          "Feedback Section",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 0.0),
-            child: Container(
-              width: 130,
-              height: 100,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/logo.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.white,
+      appBar: AppBar(title: const Text("Feedback Section")),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 16.0), // Gap between AppBar and search box
+          // Search bar for selecting user (teacher or student)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -116,21 +78,21 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16.0),
-          // Chat area with message bubbles.
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
-                return _buildMessageBubble(_messages[index]);
+                final message = _messages[index];
+                return ListTile(
+                  title: Text(message['text']),
+                  subtitle: Text(message['from']),
+                );
               },
             ),
           ),
-          // Bottom text input area.
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            color: Colors.white,
+          // Input field for sending messages
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 Expanded(
@@ -144,10 +106,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8.0),
                 IconButton(
                   icon: const Icon(Icons.send, color: Colors.blue),
-                  onPressed: _sendMessage,
+                  onPressed: _sendMessage, // Send message when pressed
                 ),
               ],
             ),
