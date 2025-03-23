@@ -5,6 +5,7 @@ const noticeRoutes = require("./routes/noticeRoutes");
 const messageRoutes = require("./routes/messages");
 const userRoutes = require("./routes/users");
 const teacherProfileRoutes = require("./routes/teacherProfileRoutes");
+const teacherRoutes = require("./routes/teacherRoutes");
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use("/api/notices", noticeRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 app.use('/api/teachers', teacherProfileRoutes);
+app.use("/api/teachers", teacherRoutes);
 
 module.exports = app;
