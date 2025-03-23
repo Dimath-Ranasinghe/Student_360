@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:your_project/services/feedback_service.dart'; // Import the FeedbackService class
-import 'package:your_project/services/socket_service.dart';   // Import the SocketService class
+
+import '../../services/feedback_service.dart';
+import '../../services/socket_service.dart';   // Import the SocketService class
 
 class FeedbackScreen extends StatefulWidget {
   const FeedbackScreen({Key? key}) : super(key: key);
