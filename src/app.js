@@ -6,6 +6,7 @@ const messageRoutes = require("./routes/messages");
 const userRoutes = require("./routes/users");
 const teacherProfileRoutes = require("./routes/teacherProfileRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 app.use('/api/teachers', teacherProfileRoutes);
 app.use("/api/teachers", teacherRoutes);
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
