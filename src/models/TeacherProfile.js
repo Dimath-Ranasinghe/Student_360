@@ -21,7 +21,8 @@ const teacherProfileSchema = new mongoose.Schema({
         default: [] 
     },
     profilePicture: { 
-        type: String 
+        type: String,
+        default: 'default-teacher.png' 
     }, 
     bio: { 
         type: String 

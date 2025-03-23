@@ -7,5 +7,6 @@ router.get('/', teacherProfileController.getAllProfiles);
 router.put('/:id', teacherProfileController.updateProfile);
 router.get('/:id', teacherProfileController.getProfileById);
 router.delete('/:id', teacherProfileController.deleteProfile);
+router.put('/:id/photo', teacherProfileController.uploadProfilePicture);
 
 module.exports = router; 
