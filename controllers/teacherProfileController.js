@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const TeacherProfile = require('../models/TeacherProfile');
+const path = require('path');
+const fs = require('fs');
 
 // Create a new teacher profile
 exports.createProfile = async (req, res) => {
@@ -147,15 +149,101 @@ exports.deleteProfile = async (req, res) => {
             return res.status(400).json({ msg: 'Invalid profile ID format' });
         }
         
-        const profile = await TeacherProfile.findByIdAndDelete(req.params.id);
+        const profile = await TeacherProfile.findById(req.params.id);
         
         if (!profile) {
             return res.status(404).json({ msg: 'Profile not found' });
         }
         
+        // Remove custom profile image if not the default
+        if (profile.profilePicture !== 'default-teacher.png') {
+            const imagePath = path.join(__dirname, '../public/uploads', profile.profilePicture);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+        
+        await profile.deleteOne();
+        
         res.json({ msg: 'Profile removed' });
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ msg: 'Server Error', error: error.message });
+    }
+};
+
+// Upload teacher profile picture
+exports.uploadProfilePicture = async (req, res) => {
+    try {
+        const teacher = await TeacherProfile.findById(req.params.id);
+        
+        if (!teacher) {
+            return res.status(404).json({
+                success: false,
+                message: 'Teacher profile not found'
+            });
+        }
+        
+        // Check if file was uploaded
+        if (!req.files || !req.files.file) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please upload a file'
+            });
+        }
+        
+        const file = req.files.file;
+        
+        // Check file type
+        if (!file.mimetype.startsWith('image')) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please upload an image file'
+            });
+        }
+        
+        // Check file size
+        if (file.size > process.env.MAX_FILE_SIZE) {
+            return res.status(400).json({
+                success: false,
+                message: `Please upload an image less than ${process.env.MAX_FILE_SIZE / 1000000} MB`
+            });
+        }
+        
+        // Create custom filename
+        file.name = `teacher_${teacher._id}${path.parse(file.name).ext}`;
+        
+        // Remove old profile image if not the default
+        if (teacher.profilePicture !== 'default-teacher.png') {
+            const oldImagePath = path.join(__dirname, '../public/uploads', teacher.profilePicture);
+            if (fs.existsSync(oldImagePath)) {
+                fs.unlinkSync(oldImagePath);
+            }
+        }
+        
+        // Move file to uploads folder
+        file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Problem with file upload'
+                });
+            }
+            
+            // Update database
+            await TeacherProfile.findByIdAndUpdate(req.params.id, { profilePicture: file.name });
+            
+            res.status(200).json({
+                success: true,
+                data: file.name
+            });
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
     }
 };
