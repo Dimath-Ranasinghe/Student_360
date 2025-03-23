@@ -32,14 +32,14 @@ const enterMarks = async (req, res) => {
   try {
     const { studentID, grade, class: className, term, subjects, totalDaysHeld, totalDaysAttended } = req.body;
     if (!studentID || !grade || !className || !term || !subjects || !totalDaysHeld || !totalDaysAttended) {
-      return res.status(400).json({ message: "Missing required fields" });
+      return res.status(400).json("Missing required fields");
     }
 
     // Check if student exists
     const existingStudent = await Student.findOne({ studentID });
 
     if (!existingStudent) {
-      return res.status(404).json({ message: "Student not found in the school database." });
+      return res.status(404).json("Student not found in the school database.");
     }
 
     console.log("Received Data from Flutter:", req.body);  
@@ -48,7 +48,7 @@ const enterMarks = async (req, res) => {
 
     // Validate grade and class
     if (existingStudent.grade !== gradeAsInt || existingStudent.class !== className) {
-      return res.status(400).json({ message: "Grade or Class does not match the school records." });
+      return res.status(400).json("Grade or Class does not match the school records.");
     }
 
     // Ensure fixed subjects are present, add if missing
