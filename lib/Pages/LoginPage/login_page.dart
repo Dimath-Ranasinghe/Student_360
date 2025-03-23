@@ -1,40 +1,74 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:student360/Components/student_nav_bar.dart';
 import 'package:student360/Components/teacher_nav_bar.dart';
 
-class LoginScreen extends StatefulWidget {
+import '../../API/basedata.dart';
 
+class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void loginHandle(){
+  Future<void> loginHandle() async {
     String userID = _userIDController.text.trim();
+    String password = _passwordController.text.trim();
 
-    if (userID.length == 6) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => StudentNavBar()));
+    if (userID.isEmpty || password.isEmpty) {
+      _showSnackbar("Please enter both User ID and Password", Colors.orange);
       _userIDController.clear();
-    } else if (userID.length == 5) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => TeacherNavBar()));
-      _userIDController.clear();
-    } else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        behavior: SnackBarBehavior.floating,
-        content: Center(child: Text("Invalid User ID. Please Enter a Valid User ID",)),
-        backgroundColor: Colors.red,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)
-        ),
-      ));
+      _passwordController.clear();
+      return;
     }
+
+    try {
+      final response = await http.post(
+        Uri.parse(Base.loginURL),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({"userID": userID, "password": password}),
+      );
+
+      var data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        if (data['role'] == 'student') {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => StudentNavBar()));
+          _userIDController.clear();
+          _passwordController.clear();
+        } else if (data['role'] == 'teacher') {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => TeacherNavBar()));
+          _userIDController.clear();
+          _passwordController.clear();
+        }
+      } else {
+        _showSnackbar(data['message'], Colors.red);
+        _userIDController.clear();
+        _passwordController.clear();
+      }
+    } catch (e) {
+      _showSnackbar("Error connecting to server", Colors.red);
+      _userIDController.clear();
+      _passwordController.clear();
+    }
+  }
+
+
+  void _showSnackbar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Center(child: Text(message)),
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -47,12 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Column(
-
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   Column(
-
                     children: [
                       Image.asset(
                         'assets/logo.png',
@@ -99,8 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock, color: Colors.white),
-                      suffixIcon: const Icon(Icons.visibility_off,
-                          color:Colors.white),
+                      suffixIcon: const Icon(Icons.visibility_off, color: Colors.white),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -110,9 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 20),
                   // Login Button
                   ElevatedButton(
-                    onPressed: () {
-                      loginHandle();
-                    },
+                    onPressed: loginHandle,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.blue,
