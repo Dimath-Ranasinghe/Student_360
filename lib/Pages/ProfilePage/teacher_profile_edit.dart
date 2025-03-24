@@ -15,9 +15,7 @@ class _TeacherSettingsScreenState extends State<TeacherSettingsScreen> {
   TextEditingController contactController = TextEditingController(text: "071 2345 678");
   TextEditingController emailController = TextEditingController(text: "john.doe@mail.com");
   TextEditingController subjectController = TextEditingController(text: "Mathematics");
-  TextEditingController experienceController = TextEditingController(text: "10 Years");
-  TextEditingController departmentController = TextEditingController(text: "Science");
-  TextEditingController bloodTypeController = TextEditingController(text: "B+");
+  TextEditingController bioController = TextEditingController(text: "BIO");
 
   Future pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -78,9 +76,7 @@ class _TeacherSettingsScreenState extends State<TeacherSettingsScreen> {
                     ProfileEditField(label: "Contact Number", controller: contactController),
                     ProfileEditField(label: "Email Address", controller: emailController),
                     ProfileEditField(label: "Subject", controller: subjectController),
-                    ProfileEditField(label: "Years of Experience", controller: experienceController),
-                    ProfileEditField(label: "Department", controller: departmentController),
-                    ProfileEditField(label: "Blood Type", controller: bloodTypeController),
+                    ProfileEditField(label: "BIO", controller: bioController),
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {

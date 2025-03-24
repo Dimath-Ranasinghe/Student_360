@@ -77,9 +77,7 @@ class TeacherProfileScreen extends StatelessWidget {
               ProfileDetail(title: "Contact Number", value: "071 2345 678"),
               ProfileDetail(title: "Email Address", value: "john.doe@mail.com"),
               ProfileDetail(title: "Subject", value: "Mathematics"),
-              ProfileDetail(title: "Years of Experience", value: "10 Years"),
-              ProfileDetail(title: "Department", value: "Science"),
-              ProfileDetail(title: "Blood Type", value: "B+"),
+              ProfileDetail(title: "BIO", value: "Math enthusiast and educator."),
 
               // Added Spacer to push logout button to bottom
               Spacer(),
