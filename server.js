@@ -16,4 +16,4 @@ const io = socketIo(server, {
 
 socketHandler(io);
 
-server.listen(process.env.PORT || 5000, () => console.log(`Server running`));
+server.listen(process.env.PORT || 3001, () => console.log(`Server running`));
