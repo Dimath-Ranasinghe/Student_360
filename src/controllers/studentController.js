@@ -1,7 +1,7 @@
 const StudentRecord = require("../models/StudentRecord");
 const Student = require("../models/student");
 
-const FIXED_SUBJECTS=["Mathematics", "English", "Language", "Religion", "Environmental Studies"];
+const FIXED_SUBJECTS=["Religion", "Language", "Mathematics", "English", "Environmental Studies"];
 
 // Add a student to the school database
 const addStudent = async (req, res) => {
