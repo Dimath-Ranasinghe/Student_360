@@ -47,13 +47,57 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     }
   }
 
-  // Send a message using Socket.IO
+  // Send a message using Socket.IO and save to database
   void _sendMessage() async {
     final text = _messageController.text.trim();
     if (text.isEmpty) return;
 
-    _socketService.sendMessage(text, currentUser, selectedUser);
-    _messageController.clear(); // Clear the message input field
+    try {
+      print('Attempting to send message: "$text" from $currentUser to $selectedUser');
+
+      // Send via socket for real-time delivery
+      _socketService.sendMessage(text, currentUser, selectedUser);
+      print('Socket message sent successfully');
+
+      // Save to database
+      print('Attempting to save message to database...');
+      bool success = await _feedbackService.sendMessage(text, currentUser, selectedUser);
+      print('Database save result: $success');
+
+      if (!success) {
+        // Show error if database save failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: const Center(child: Text("Failed to save message to database")),
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      } else {
+        // Only add the message to local state if it was saved successfully
+        setState(() {
+          _messages.add({
+            'text': text,
+            'from': currentUser,
+            'to': selectedUser,
+            'timestamp': DateTime.now().toIso8601String(),
+          });
+        });
+
+        _messageController.clear(); // Clear the message input field
+      }
+    } catch (e) {
+      print('Error sending message: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text("Error sending message: $e"),
+          backgroundColor: Colors.red,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+    }
   }
 
   @override

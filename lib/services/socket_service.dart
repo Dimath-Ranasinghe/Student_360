@@ -4,7 +4,8 @@ class SocketService {
   late IO.Socket socket;
 
   void connect() {
-    socket = IO.io('http://localhost:3000', <String, dynamic>{
+    // Update to use the same host as your REST API
+    socket = IO.io('http://10.0.2.2:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

@@ -64,4 +64,3 @@ class _StudentNavBarState extends State<StudentNavBar> {
     );
   }
 }
-

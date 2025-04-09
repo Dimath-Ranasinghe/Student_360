@@ -64,4 +64,3 @@ class _TeacherNavBarState extends State<TeacherNavBar> {
     );
   }
 }
-
