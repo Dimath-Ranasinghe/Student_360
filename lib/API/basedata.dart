@@ -13,5 +13,6 @@ class Base {
   static const String studentBaseURL = '$baseURL/students';
   static String submitMarks = "$studentBaseURL/enter-marks";
 
-  static String fetchMarks(String studentID) => "$studentBaseURL/students/view-marks/$studentID";
+
+  static String getStudentMarks = "$studentBaseURL/view-marks/";
 }
