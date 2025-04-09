@@ -83,3 +83,19 @@ Future<http.Response> getStudentMarks(String studentId) async {
     throw Exception("Failed to load student marks");
   }
 }
+
+
+
+Future<http.Response> getStudentMarks(String studentId) async {
+  String url = "${Base.getStudentMarks}$studentId";
+  try {
+    final response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    print("Getting student marks from: $url");
+    print("Response: ${response.body}");
+    return response;
+  } catch (e) {
+    throw Exception("Failed to load student marks");
+  }
+}
