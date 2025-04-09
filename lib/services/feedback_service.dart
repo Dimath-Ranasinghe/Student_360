@@ -1,55 +1,33 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../API/basedata.dart';
 
 class FeedbackService {
-  // Fetch messages between two users
+  static const String _baseUrl =
+      'http://10.0.2.2:3001/api/messages'; // Update with your backend URL
+
+  // Fetch messages from the server (GET request)
   Future<List<dynamic>> fetchMessages(String from, String to) async {
-    final response = await http.get(
-      Uri.parse(Base.getMessages(from, to)),
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
-    );
+    final response = await http.get(Uri.parse('$_baseUrl?from=$from&to=$to'));
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      return data['data'] ?? [];  // Return the list of messages
+      return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load messages: ${response.statusCode}');
+      throw Exception('Failed to load messages');
     }
   }
 
-  // Send a message
+  // Send message to the server (POST request)
   Future<bool> sendMessage(String text, String from, String to) async {
-    try {
-      final url = Uri.parse(Base.sendMessage);
-      print('Sending message to URL: $url');
+    final response = await http.post(
+      Uri.parse(_baseUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'text': text, 'from': from, 'to': to}),
+    );
 
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: json.encode({
-          'text': text,
-          'from': from,
-          'to': to,
-          'timestamp': DateTime.now().toIso8601String(),
-        }),
-      );
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        print('Message saved to database successfully');
-        return true;
-      } else {
-        print('Failed to save message: ${response.statusCode}, ${response.body}');
-        return false;
-      }
-    } catch (e) {
-      print('Exception sending message: $e');
-      return false;
+    if (response.statusCode == 201) {
+      return true; // Success
+    } else {
+      return false; // Failure
     }
   }
 }

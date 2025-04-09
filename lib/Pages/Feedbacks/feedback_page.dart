@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
-
-//import '../../services/feedback_service.dart';
-//import '../../services/socket_service.dart';   // Import the SocketService class
-
 import 'package:student360/services/feedback_service.dart';
 import 'package:student360/services/socket_service.dart';
 
 class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({Key? key}) : super(key: key);
+  const FeedbackScreen({super.key});
 
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
-  final SocketService _socketService = SocketService(); // Initialize SocketService
-  final FeedbackService _feedbackService = FeedbackService(); // Initialize FeedbackService
+  final SocketService _socketService =
+      SocketService(); // Initialize SocketService
+  final FeedbackService _feedbackService =
+      FeedbackService(); // Initialize FeedbackService
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
 
   List<dynamic> _messages = [];
   String currentUser = 'teacher123'; // Example, replace with actual user ID
-  String selectedUser = 'student456'; // Example, replace with actual selected user ID
+  String selectedUser =
+      'student456'; // Example, replace with actual selected user ID
 
   @override
   void initState() {
@@ -29,7 +28,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     _socketService.connect(); // Connect to the server on widget initialization
     _socketService.socket.on('receiveMessage', (data) {
       setState(() {
-        _messages.add(data);  // Add the received message to the list
+        _messages.add(data); // Add the received message to the list
       });
     });
     _loadMessages(); // Load initial messages from the backend
@@ -38,7 +37,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   // Fetch messages from the backend using the FeedbackService
   void _loadMessages() async {
     try {
-      final messages = await _feedbackService.fetchMessages(currentUser, selectedUser);
+      final messages = await _feedbackService.fetchMessages(
+        currentUser,
+        selectedUser,
+      );
       setState(() {
         _messages = messages;
       });
@@ -47,13 +49,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     }
   }
 
-  // Send a message using Socket.IO and save to database
+  // Send a message using Socket.IO and save to the database
   void _sendMessage() async {
     final text = _messageController.text.trim();
     if (text.isEmpty) return;
 
     try {
-      print('Attempting to send message: "$text" from $currentUser to $selectedUser');
+      print(
+        'Attempting to send message: "$text" from $currentUser to $selectedUser',
+      );
 
       // Send via socket for real-time delivery
       _socketService.sendMessage(text, currentUser, selectedUser);
@@ -61,7 +65,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
       // Save to database
       print('Attempting to save message to database...');
-      bool success = await _feedbackService.sendMessage(text, currentUser, selectedUser);
+      bool success = await _feedbackService.sendMessage(
+        text,
+        currentUser,
+        selectedUser,
+      );
       print('Database save result: $success');
 
       if (!success) {
@@ -69,9 +77,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: const Center(child: Text("Failed to save message to database")),
+            content: const Center(
+              child: Text("Failed to save message to database"),
+            ),
             backgroundColor: Colors.red,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       } else {
@@ -94,7 +106,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           behavior: SnackBarBehavior.floating,
           content: Text("Error sending message: $e"),
           backgroundColor: Colors.red,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     }
@@ -102,7 +116,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   @override
   void dispose() {
-    _socketService.disconnect(); // Disconnect from the server when the widget is disposed
+    _socketService
+        .disconnect(); // Disconnect from the server when the widget is disposed
     super.dispose();
   }
 
