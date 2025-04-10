@@ -22,6 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        
       });
     }
   }
