@@ -1,0 +1,38 @@
+name: CI/CD
+# keep this in root of the project
+
+on:
+  push:
+    branches: [ "Dev-Test-Backend" ]
+
+  pull_request:
+    branches: [ "Dev-Test-Backend" ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+
+      # 3. Install Node.js dependencies
+      - name: Install Node.js dependencies
+        run: npm install
+        # working-directory: "Backend"
+        # if you put backend files into Backend folder set working-directory as "Backend"
+        
+      # 4. Run Node.js tests
+      - name: Run Tests
+        run: npm test
+        # working-directory: "Backend"
+        # if you put backend files into Backend folder set working-directory as "Backend"
+
+# implement deploy jobs here

@@ -1,5 +1,6 @@
 const Student = require("../models/student");
 const Teacher = require("../models/teacher");
+const bcrypt = require("bcrypt");
 
 const loginUser = async (req, res) => {
   try {
@@ -19,9 +20,14 @@ const loginUser = async (req, res) => {
       role = "teacher";
     }
 
-    if (!user || user.password !== password) {
-      return res.status(401).json({ message: "Invalid username or password" });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid user ID or password" });
+    }
 
+    // Compare hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid user ID or password" });
     }
 
     res.status(200).json({ message: "Login successful", role });
@@ -31,3 +37,4 @@ const loginUser = async (req, res) => {
 };
 
 module.exports = { loginUser };
+

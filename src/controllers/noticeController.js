@@ -1,4 +1,4 @@
-const Notice = require("../models/notice");
+const Notice = require("../models/Notice");
 
 // Create a new notice
 exports.createNotice = async (req, res) => {

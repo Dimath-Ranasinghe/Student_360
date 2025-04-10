@@ -1,10 +1,21 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const teacherSchema = new mongoose.Schema({
   teacherID: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String, required: true }
 });
 
-module.exports = mongoose.model("Teacher", teacherSchema);
+// Hash password before saving
+teacherSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+const Teacher = mongoose.model("Teacher", teacherSchema);
+module.exports = Teacher;
+
